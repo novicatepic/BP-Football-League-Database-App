@@ -12,6 +12,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JComboBox;
+import java.awt.Font;
 
 public class FixtureShowGui extends JFrame {
 
@@ -20,8 +22,18 @@ public class FixtureShowGui extends JFrame {
 	private final JLabel[] gameLabels = new JLabel[10];
 	private final JButton[] gameButtons = new JButton[10];
 	JLabel whichFixtureLabel;
-	private JPanel resultPanel;
+	private JPanel awayTeamsPanel;
 	private JButton btnNewButton;
+	private JPanel resultsPanel;
+	private JPanel datePanel;
+	private JComboBox gameweekBox;
+	private JPanel selectFixturePanel;
+	private JLabel lblNewLabel;
+	private JButton newFixtureButton;
+	private JButton changeFixtureButton;
+	private JButton deleteFixtureButton;
+	private JButton showPlayersButton;
+	private JComboBox fixtureBox;
 	/**
 	 * Launch the application.
 	 */
@@ -41,7 +53,7 @@ public class FixtureShowGui extends JFrame {
 	public FixtureShowGui() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
-		setBounds(100, 100, 675, 495);
+		setBounds(100, 100, 1188, 763);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -50,17 +62,88 @@ public class FixtureShowGui extends JFrame {
 		whichFixtureLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		whichFixtureLabel.setBounds(277, 411, 130, 13);
 		getContentPane().add(whichFixtureLabel);	
-		JPanel fixturePanel = new JPanel();
-		fixturePanel.setBounds(61, 16, 382, 352);
-		contentPane.add(fixturePanel);
-		fixturePanel.setLayout(new GridLayout(1, 0, 0, 0));
-		fixturePanel.setLayout(new GridLayout(10, 1));
+		JPanel homeTeamsPanel = new JPanel();
+		homeTeamsPanel.setBounds(50, 193, 170, 352);
+		contentPane.add(homeTeamsPanel);
+		homeTeamsPanel.setLayout(new GridLayout(1, 0, 0, 0));
+		homeTeamsPanel.setLayout(new GridLayout(10, 1));
 		
-		resultPanel = new JPanel();
-		resultPanel.setBounds(476, 16, 161, 352);
-		resultPanel.setLayout(new GridLayout(1, 0, 0, 0));
-		resultPanel.setLayout(new GridLayout(10, 1));
-		contentPane.add(resultPanel);
+		awayTeamsPanel = new JPanel();
+		awayTeamsPanel.setBounds(237, 193, 170, 352);
+		awayTeamsPanel.setLayout(new GridLayout(1, 0, 0, 0));
+		awayTeamsPanel.setLayout(new GridLayout(10, 1));
+		contentPane.add(awayTeamsPanel);
+		
+		resultsPanel = new JPanel();
+		resultsPanel.setBounds(417, 193, 170, 352);
+		contentPane.add(resultsPanel);
+		resultsPanel.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		datePanel = new JPanel();
+		datePanel.setBounds(597, 193, 170, 352);
+		contentPane.add(datePanel);
+		datePanel.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		gameweekBox = new JComboBox();
+		gameweekBox.setToolTipText("KOLO");
+		gameweekBox.setBounds(96, 94, 71, 44);
+		contentPane.add(gameweekBox);
+		
+		selectFixturePanel = new JPanel();
+		selectFixturePanel.setBounds(911, 193, 170, 352);
+		contentPane.add(selectFixturePanel);
+		selectFixturePanel.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		lblNewLabel = new JLabel("FIXTURES");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(50, 10, 1031, 59);
+		contentPane.add(lblNewLabel);
+		
+		newFixtureButton = new JButton("Add a new fixture");
+		newFixtureButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				NewFixtureGui nfg = new NewFixtureGui();
+				nfg.setVisible(true);
+			}
+		});
+		newFixtureButton.setBounds(68, 615, 222, 72);
+		contentPane.add(newFixtureButton);
+		
+		changeFixtureButton = new JButton("Change fixture");
+		changeFixtureButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChangeFixtureGui cfg = new ChangeFixtureGui();
+				cfg.setVisible(true);
+			}
+		});
+		changeFixtureButton.setBounds(354, 615, 222, 72);
+		contentPane.add(changeFixtureButton);
+		
+		deleteFixtureButton = new JButton("Delete a fixture");
+		deleteFixtureButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DeleteFixtureGui dfg = new DeleteFixtureGui();
+				dfg.setVisible(true);
+			}
+		});
+		deleteFixtureButton.setBounds(613, 615, 222, 72);
+		contentPane.add(deleteFixtureButton);
+		
+		showPlayersButton = new JButton("Show players");
+		showPlayersButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ShowPlayers sp = new ShowPlayers();
+				sp.setVisible(true);
+			}
+		});
+		showPlayersButton.setBounds(873, 615, 222, 72);
+		contentPane.add(showPlayersButton);
+		
+		fixtureBox = new JComboBox();
+		fixtureBox.setToolTipText("KOLO");
+		fixtureBox.setBounds(225, 94, 71, 44);
+		contentPane.add(fixtureBox);
 		/*btnNewButton = new JButton("New button");
 		btnNewButton.setBounds(511, 403, 85, 21);
 		contentPane.add(btnNewButton);*/
@@ -68,17 +151,17 @@ public class FixtureShowGui extends JFrame {
 			gameLabels[i] = new JLabel();
 			gameLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
 			gameLabels[i].setText(String.valueOf(i));
-			fixturePanel.add(gameLabels[i]);
+			homeTeamsPanel.add(gameLabels[i]);
 		}
 		
 		for(int i = 0; i < 10; i++) {
 			gameButtons[i] = new JButton();
 			gameButtons[i].setHorizontalAlignment(SwingConstants.CENTER);
 			gameButtons[i].setText(String.valueOf(i));
-			resultPanel.add(gameButtons[i]);
+			awayTeamsPanel.add(gameButtons[i]);
 		}
 		
-		for(int i = 0; i < 10; i++) {
+		/*for(int i = 0; i < 10; i++) {
 			gameButtons[i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e)  {
 					GameInfo gameInfo = new GameInfo();
@@ -88,7 +171,7 @@ public class FixtureShowGui extends JFrame {
 					dispose();
 				}
 			});
-		}
+		}*/
 		
 	}
 	

@@ -9,6 +9,9 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class Gui extends JFrame {
 
@@ -37,9 +40,9 @@ public class Gui extends JFrame {
 		setTitle("Jelen SuperLiga");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 201, 482);
+		setBounds(100, 100, 203, 370);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 0, 0));
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -55,7 +58,7 @@ public class Gui extends JFrame {
 		clubButton.setForeground(new Color(0, 0, 0));
 		
 		
-		clubButton.setBounds(24, 42, 121, 51);
+		clubButton.setBounds(24, 63, 121, 51);
 		contentPane.add(clubButton);
 		
 		JButton stadiumButton = new JButton("Visit stadiums");
@@ -70,29 +73,23 @@ public class Gui extends JFrame {
 		stadiumButton.setBounds(24, 145, 121, 51);
 		contentPane.add(stadiumButton);
 		
-		JButton btnVisitWiners = new JButton("Visit winners");
-		btnVisitWiners.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				WinnerGui winnerGui = new WinnerGui();
-				winnerGui.setVisible(true);
-			}
-		});
-		
-		btnVisitWiners.setForeground(Color.BLACK);
-		btnVisitWiners.setBounds(24, 254, 121, 51);
-		contentPane.add(btnVisitWiners);
+		JLabel lblNewLabel = new JLabel("WELCOME");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(10, 10, 160, 36);
+		contentPane.add(lblNewLabel);
 		
 		JButton btnVisitWiners_1 = new JButton("Visit fixtures");
 		btnVisitWiners_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				FixtureChooseGui fixtureGui = new FixtureChooseGui();
+				FixtureShowGui fixtureGui = new FixtureShowGui();
 				fixtureGui.setVisible(true);
 			}
 		});
 		
 		
 		btnVisitWiners_1.setForeground(Color.BLACK);
-		btnVisitWiners_1.setBounds(24, 357, 121, 51);
+		btnVisitWiners_1.setBounds(24, 239, 121, 51);
 		contentPane.add(btnVisitWiners_1);
 	}
 }

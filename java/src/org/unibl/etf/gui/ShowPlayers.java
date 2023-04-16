@@ -38,7 +38,7 @@ public class ShowPlayers extends JFrame {
 	 */
 	public ShowPlayers() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 712, 518);
+		setBounds(100, 100, 838, 744);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -47,13 +47,31 @@ public class ShowPlayers extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel playerPanel = new JPanel();
-		playerPanel.setBounds(20, 10, 429, 461);
+		playerPanel.setBounds(128, 115, 208, 528);
 		contentPane.add(playerPanel);
 		playerPanel.setLayout(new GridLayout(22, 1));
 		JPanel playerButtonPanel = new JPanel();
-		playerButtonPanel.setBounds(475, 10, 213, 461);
+		playerButtonPanel.setBounds(506, 115, 203, 528);
 		contentPane.add(playerButtonPanel);
 		playerButtonPanel.setLayout(new GridLayout(22, 1));
+		
+		JLabel lblNewLabel = new JLabel("HOME PLAYERS");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(128, 27, 208, 52);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblAwayPlayers = new JLabel("AWAY PLAYERS");
+		lblAwayPlayers.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAwayPlayers.setBounds(501, 27, 208, 52);
+		contentPane.add(lblAwayPlayers);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(441, 115, 55, 528);
+		contentPane.add(panel);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(61, 115, 55, 528);
+		contentPane.add(panel_1);
 		for(int i = 0; i < 22; i++) {
 			playerLabels[i] = new JLabel();
 			playerLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
@@ -68,7 +86,7 @@ public class ShowPlayers extends JFrame {
 			playerButtonPanel.add(playerButtons[i]);
 		}
 		
-		for(int i = 0; i < 22; i++) {
+		/*for(int i = 0; i < 22; i++) {
 			playerButtons[i].addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e)  {
 					ShowPlayerInfo playerInfo = new ShowPlayerInfo();
@@ -78,7 +96,7 @@ public class ShowPlayers extends JFrame {
 					dispose();
 				}
 			});
-		}
+		}*/
 		
 	}
 
