@@ -16,6 +16,7 @@ import org.unibl.etf.util.DBUtil;
 
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -32,9 +33,9 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 	private static final String SQL_DELETE = "DELETE FROM stadion WHERE StadionId=?";
 	
 	private JPanel contentPane;
-	public static final int NUM_TEAMS = 20;
-
-	private JLabel[][] labels = new JLabel[NUM_TEAMS][4];
+	private static int NUM_TEAMS;
+	private static StadiumGui frame;
+	private JLabel[][] labels;/* = new JLabel[NUM_TEAMS][4];*/
 	/**
 	 * Launch the application.
 	 */
@@ -42,7 +43,7 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					StadiumGui frame = new StadiumGui();
+					frame = new StadiumGui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,10 +52,21 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 		});
 	}
 
+	public List<Stadium> getData() {
+		return stadiums;
+	}
+	
 	/**
 	 * Create the frame.
 	 */
+	List<Stadium> stadiums;
 	public StadiumGui() {
+		stadiums = selectAll();
+		for(Stadium s : stadiums) {
+			System.out.println(s);
+		}
+		NUM_TEAMS = stadiums.size();
+		labels = new JLabel[NUM_TEAMS][4];
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				setBounds(100, 100, 752, 595);
 				setResizable(false);
@@ -69,6 +81,7 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				addButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						NewStadiumWindow nsw = new NewStadiumWindow();
+						nsw.setStadiumFrame(frame);
 						nsw.setVisible(true);
 					}
 				});
@@ -78,8 +91,8 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				JButton changeButton = new JButton("Change stadium");
 				changeButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
 						ChangeStadiumWindow csw = new ChangeStadiumWindow();
+						csw.setStadiumFrame(frame);
 						csw.setVisible(true);
 						
 					}
@@ -91,6 +104,8 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				deleteButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						DeleteStadiumWindow dsw = new DeleteStadiumWindow();
+						dsw.setStadiumFrame(frame);
+						dsw.populateData();
 						dsw.setVisible(true);
 					}
 				});
@@ -109,9 +124,32 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				for(int i = 0; i < NUM_TEAMS; i++) {
 					for(int j = 0; j < 4; j++) {
 						labels[i][j] = new JLabel();
-						labels[i][j].setText(String.valueOf(i+j));
-						labels[i][j].setHorizontalAlignment(JLabel.CENTER);
 					}
+				}
+				
+				for(int i = 0; i < NUM_TEAMS; i++) {
+					//for(int j = 0; j < 4; j++) {
+						int j=0;
+						//labels[i][j] = new JLabel();
+						for(int k = 0; k < 4; k++) {
+							switch(j) {
+							case 0:
+								labels[i][j].setText(String.valueOf(stadiums.get(i).getStadionId()));
+								j++;
+								break;
+							case 1:
+								labels[i][j].setText(stadiums.get(i).getNaziv());
+								j++;
+								break;
+							case 2:
+								labels[i][j].setText(String.valueOf(stadiums.get(i).getKapacitet()));
+								j++;
+								break;
+							case 3:
+								labels[i][j].setText(stadiums.get(i).getGrad());
+								break;
+						}
+						}
 				}
 				
 				for(int i = 0; i < NUM_TEAMS; i++) {
@@ -123,22 +161,22 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				
 				JLabel lblNewLabel = new JLabel("ID");
 				lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-				lblNewLabel.setBounds(82, 55, 66, 27);
+				lblNewLabel.setBounds(57, 55, 66, 27);
 				contentPane.add(lblNewLabel);
 				
 				JLabel lblFoundationDate = new JLabel("NAME");
 				lblFoundationDate.setHorizontalAlignment(SwingConstants.CENTER);
-				lblFoundationDate.setBounds(252, 55, 85, 27);
+				lblFoundationDate.setBounds(205, 55, 85, 27);
 				contentPane.add(lblFoundationDate);
 				
 				JLabel lblNumtrophies = new JLabel("CAPACITY");
 				lblNumtrophies.setHorizontalAlignment(SwingConstants.CENTER);
-				lblNumtrophies.setBounds(413, 55, 85, 27);
+				lblNumtrophies.setBounds(382, 55, 85, 27);
 				contentPane.add(lblNumtrophies);
 				
 				JLabel lblStadiumname = new JLabel("TOWN");
 				lblStadiumname.setHorizontalAlignment(SwingConstants.CENTER);
-				lblStadiumname.setBounds(582, 55, 85, 27);
+				lblStadiumname.setBounds(544, 55, 85, 27);
 				contentPane.add(lblStadiumname);
 				
 				JLabel lblNewLabel_1 = new JLabel("STADIUMS");
@@ -147,10 +185,7 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				lblNewLabel_1.setBounds(56, 11, 611, 27);
 				contentPane.add(lblNewLabel_1);
 				
-				List<Stadium> stadiums = selectAll();
-				for(Stadium s : stadiums) {
-					System.out.println(s);
-				}
+				
 				
 	}
 
@@ -180,21 +215,68 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 	}
 
 	@Override
-	public int insert(Stadium s) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insert(Stadium i) {
+		
+		int retVal = 0;
+		Connection c = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			c = DBUtil.getConnection();
+			Object values[] = { i.getNaziv(), i.getKapacitet(), i.getGrad() };
+			ps = DBUtil.prepareStatement(c, SQL_INSERT, true, values);
+			retVal = ps.executeUpdate();
+			if (retVal != 0) {
+				rs = ps.getGeneratedKeys();
+				if (rs.next())
+					i.setStadionId(rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs, ps, c);
+		}
+
+		return retVal;
 	}
 
 	@Override
-	public int update(Stadium s) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(Stadium i) {
+		int retVal = 0;
+		Connection c = null;
+		PreparedStatement ps = null;
+
+		try {
+			c = DBUtil.getConnection();
+			Object values[] = { i.getNaziv(), i.getKapacitet(), i.getGrad(), i.getStadionId()};
+			ps = DBUtil.prepareStatement(c, SQL_UPDATE, false, values);
+			retVal = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(ps, c);
+		}
+		return retVal;
 	}
 
 	@Override
-	public int delete(Stadium s) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int delete(Stadium i) {
+		int retVal = 0;
+		Connection c = null;
+		PreparedStatement ps = null;
+
+		try {
+			c = DBUtil.getConnection();
+			Object values[] = { i.getStadionId() };
+			ps = DBUtil.prepareStatement(c, SQL_DELETE, false, values);
+			retVal = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(ps, c);
+		}
+		return retVal;
 	}
 
 }

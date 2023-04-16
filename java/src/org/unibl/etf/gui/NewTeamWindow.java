@@ -5,12 +5,24 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.unibl.etf.classes.FootballClub;
+import org.unibl.etf.classes.Stadium;
+import org.unibl.etf.util.DBUtil;
+
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class NewTeamWindow extends JFrame {
@@ -20,6 +32,21 @@ public class NewTeamWindow extends JFrame {
 	private JTextField dateField;
 	private JTextField trophiesWonField;
 
+	private TeamGui frame;
+	public void setTeamFrame(TeamGui frame) {
+		this.frame = frame;
+	}
+	private List<Stadium> stadiums;
+	public void passStadiums(List<Stadium> stadiums) {
+		this.stadiums = stadiums;
+	}
+	private JComboBox chooseStadiumBox;
+	public void populateData() {
+		for(Stadium s : stadiums) {
+			chooseStadiumBox.addItem(new String(String.valueOf(s.getStadionId())));
+		}
+	}
+	
 	/**
 	 * Launch the application.
 	 */
@@ -79,8 +106,8 @@ public class NewTeamWindow extends JFrame {
 		trophiesWonField.setBounds(254, 287, 165, 41);
 		contentPane.add(trophiesWonField);
 		
-		JComboBox chooseStadiumBox = new JComboBox();
-		chooseStadiumBox.setBounds(648, 56, 29, 21);
+		chooseStadiumBox = new JComboBox();
+		chooseStadiumBox.setBounds(606, 56, 71, 21);
 		contentPane.add(chooseStadiumBox);
 		
 		JLabel lblChooseStadium = new JLabel("Choose stadium = ");
@@ -91,10 +118,38 @@ public class NewTeamWindow extends JFrame {
 		JButton saveButton = new JButton("SAVE");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				try {
+					String name = nameField.getText();
+					String[] dateFieldParse = dateField.getText().split("-");
+					if(dateFieldParse.length != 3) {
+						throw new Exception("Problem!");
+					}
+					Date date = Date.valueOf(dateField.getText());
+					int numTrophiesWon = Integer.valueOf(trophiesWonField.getText());
+					FootballClub s = new FootballClub();
+					s.setNaziv(name);
+					s.setDatumOsnivanja(date);
+					s.setBrojOsvojenihTrofeja(numTrophiesWon);
+					String id = String.valueOf(chooseStadiumBox.getSelectedItem());
+					int realId = Integer.valueOf(id);
+					s.setStadionId(realId);
+					frame.insert(s);
+					try {
+						Thread.sleep(1000);
+					} catch(InterruptedException ex) {
+						ex.printStackTrace();
+					}
+					frame.dispose();
+					TeamGui sg = new TeamGui();
+					sg.setVisible(true);
+				} catch(Exception e1) {
+					e1.printStackTrace();
+				}				
 			}
 		});
 		saveButton.setBounds(35, 399, 643, 57);
 		contentPane.add(saveButton);
 	}
+	
+	
 }

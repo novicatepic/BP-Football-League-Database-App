@@ -65,6 +65,12 @@ public class FootballClub implements Serializable {
 	public void setStadionId(int stadionId) {
 		StadionId = stadionId;
 	}
+
+	@Override
+	public String toString() {
+		return "FootballClub [idKluba=" + idKluba + ", naziv=" + naziv + ", datumOsnivanja=" + datumOsnivanja
+				+ ", brojOsvojenihTrofeja=" + brojOsvojenihTrofeja + ", StadionId=" + StadionId + "]";
+	}
 	
 	
 	

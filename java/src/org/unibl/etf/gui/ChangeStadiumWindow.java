@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,12 +15,14 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.unibl.etf.classes.Stadium;
+
 public class ChangeStadiumWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField nameField;
-	private JTextField dateField;
-	private JTextField trophiesWonField;
+	private JTextField capacityField;
+	private JTextField townField;
 	/**
 	 * Launch the application.
 	 */
@@ -34,6 +37,12 @@ public class ChangeStadiumWindow extends JFrame {
 				}
 			}
 		});
+	}
+
+	private StadiumGui frame;
+	private JTextField idField;
+	public void setStadiumFrame(StadiumGui frame) {
+		this.frame = frame;
 	}
 
 	/**
@@ -51,42 +60,70 @@ public class ChangeStadiumWindow extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Name = ");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(35, 64, 172, 62);
+		lblNewLabel.setBounds(35, 129, 172, 62);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblFoundatioDate = new JLabel("Capacity = ");
 		lblFoundatioDate.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFoundatioDate.setBounds(35, 147, 172, 62);
+		lblFoundatioDate.setBounds(35, 192, 172, 62);
 		contentPane.add(lblFoundatioDate);
 		
 		JLabel lblNumberOfTrophies = new JLabel("Town = ");
 		lblNumberOfTrophies.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNumberOfTrophies.setBounds(35, 236, 172, 62);
+		lblNumberOfTrophies.setBounds(35, 250, 172, 62);
 		contentPane.add(lblNumberOfTrophies);
 		
 		nameField = new JTextField();
-		nameField.setBounds(254, 75, 165, 41);
+		nameField.setBounds(254, 140, 165, 41);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 		
-		dateField = new JTextField();
-		dateField.setColumns(10);
-		dateField.setBounds(254, 154, 165, 41);
-		contentPane.add(dateField);
+		capacityField = new JTextField();
+		capacityField.setColumns(10);
+		capacityField.setBounds(254, 203, 165, 41);
+		contentPane.add(capacityField);
 		
-		trophiesWonField = new JTextField();
-		trophiesWonField.setColumns(10);
-		trophiesWonField.setBounds(254, 247, 165, 41);
-		contentPane.add(trophiesWonField);
-		
-		nameField.setText("/");
-		dateField.setText("/");
-		trophiesWonField.setText("/");
+		townField = new JTextField();
+		townField.setColumns(10);
+		townField.setBounds(254, 261, 165, 41);
+		contentPane.add(townField);
 		
 		JButton saveButton = new JButton("SAVE");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				List<Stadium> data = frame.getData();
+				Stadium s = null;
+				for(Stadium stad : data) {
+					if(stad.getStadionId() == Integer.valueOf(idField.getText())) {
+						s = stad;
+					}
+				}
+				if(s != null) {
+					boolean anything = false;
+					if(!"".equals(nameField.getText())) {
+						s.setNaziv(nameField.getText());
+						anything = true;
+					}
+					if(!"".equals(capacityField.getText())) {
+						s.setKapacitet(Integer.valueOf(capacityField.getText()));
+						anything = true;
+					}
+					if(!"".equals(townField.getText())) {
+						s.setGrad(townField.getText());
+						anything = true;
+					}
+					if(anything) {
+						frame.update(s);
+						try {
+							Thread.sleep(1000);
+						} catch(InterruptedException ex) {
+							ex.printStackTrace();
+						}
+						frame.dispose();
+						StadiumGui sg = new StadiumGui();
+						sg.setVisible(true);
+					}
+				}
 			}
 		});
 		saveButton.setBounds(35, 399, 643, 57);
@@ -97,6 +134,15 @@ public class ChangeStadiumWindow extends JFrame {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setBounds(35, 10, 642, 29);
 		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNumberOfTrophies_1 = new JLabel("Id = ");
+		lblNumberOfTrophies_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNumberOfTrophies_1.setBounds(35, 72, 172, 62);
+		contentPane.add(lblNumberOfTrophies_1);
+		
+		idField = new JTextField();
+		idField.setColumns(10);
+		idField.setBounds(254, 83, 165, 41);
+		contentPane.add(idField);
 	}
-
 }

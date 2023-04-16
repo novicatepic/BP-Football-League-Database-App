@@ -10,9 +10,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
+import org.unibl.etf.classes.FootballClub;
+import org.unibl.etf.classes.Stadium;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.util.List;
 import java.awt.Font;
 
 public class ChangeTeamWindow extends JFrame {
@@ -21,6 +27,8 @@ public class ChangeTeamWindow extends JFrame {
 	private JTextField nameField;
 	private JTextField dateField;
 	private JTextField trophiesWonField;
+	private JTextField clubIdField;
+	private JTextField stadiumIdField;
 	/**
 	 * Launch the application.
 	 */
@@ -36,7 +44,15 @@ public class ChangeTeamWindow extends JFrame {
 			}
 		});
 	}
-
+	private List<Stadium> stadiums;
+	public void passStadiums(List<Stadium> stadiums) {
+		this.stadiums = stadiums;
+	}
+	private TeamGui frame;
+	public void setTeamFrame(TeamGui frame) {
+		this.frame = frame;
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -52,12 +68,12 @@ public class ChangeTeamWindow extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Name = ");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(35, 64, 172, 62);
+		lblNewLabel.setBounds(35, 92, 172, 62);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblFoundatioDate = new JLabel("Foundation date = ");
 		lblFoundatioDate.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFoundatioDate.setBounds(35, 147, 172, 62);
+		lblFoundatioDate.setBounds(35, 164, 172, 62);
 		contentPane.add(lblFoundatioDate);
 		
 		JLabel lblNumberOfTrophies = new JLabel("Number of trophies won = ");
@@ -66,23 +82,19 @@ public class ChangeTeamWindow extends JFrame {
 		contentPane.add(lblNumberOfTrophies);
 		
 		nameField = new JTextField();
-		nameField.setBounds(254, 75, 165, 41);
+		nameField.setBounds(254, 103, 165, 41);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 		
 		dateField = new JTextField();
 		dateField.setColumns(10);
-		dateField.setBounds(254, 154, 165, 41);
+		dateField.setBounds(254, 175, 165, 41);
 		contentPane.add(dateField);
 		
 		trophiesWonField = new JTextField();
 		trophiesWonField.setColumns(10);
 		trophiesWonField.setBounds(254, 247, 165, 41);
 		contentPane.add(trophiesWonField);
-		
-		nameField.setText("/");
-		dateField.setText("/");
-		trophiesWonField.setText("/");
 		
 		JComboBox chooseStadiumBox = new JComboBox();
 		chooseStadiumBox.setBounds(649, 85, 29, 21);
@@ -96,6 +108,57 @@ public class ChangeTeamWindow extends JFrame {
 		JButton saveButton = new JButton("SAVE");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					List<FootballClub> data = frame.getData();
+					FootballClub s = null;
+					for(FootballClub stad : data) {
+						if(stad.getIdKluba() == Integer.valueOf(clubIdField.getText())) {
+							s = stad;
+						}
+					}
+					if(s != null) {
+						boolean anything = false;
+						if(!"".equals(nameField.getText())) {
+							s.setNaziv(nameField.getText());
+							anything = true;
+						}
+						if(!"".equals(dateField.getText())) {
+							String[] dateFieldParse = dateField.getText().split("-");
+							if(dateFieldParse.length != 3) {
+								throw new Exception("Problem!");
+							}
+							Date date = Date.valueOf(dateField.getText());
+							s.setDatumOsnivanja(date);
+							anything = true;
+						}
+						if(!"".equals(trophiesWonField.getText())) {
+							s.setBrojOsvojenihTrofeja(Integer.valueOf(trophiesWonField.getText()));
+							anything = true;
+						}
+						if(!"".equals(stadiumIdField.getText())) {
+							if(stadiums.contains(Integer.valueOf(stadiumIdField.getText()))) {
+								s.setStadionId(Integer.valueOf(stadiumIdField.getText()));
+							} else {
+								throw new Exception("Nepostojeci stadion");
+							}
+							//s.setGrad(trophiesWonField.getText());
+							anything = true;
+						}
+						if(anything) {
+							frame.update(s);
+							try {
+								Thread.sleep(1000);
+							} catch(InterruptedException ex) {
+								ex.printStackTrace();
+							}
+							frame.dispose();
+							TeamGui sg = new TeamGui();
+							sg.setVisible(true);
+						}
+					}
+				} catch(Exception e12) {
+					e12.printStackTrace();
+				}
 				
 			}
 		});
@@ -107,5 +170,25 @@ public class ChangeTeamWindow extends JFrame {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setBounds(35, 10, 642, 29);
 		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNumberOfTrophies_1 = new JLabel("Id = ");
+		lblNumberOfTrophies_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNumberOfTrophies_1.setBounds(35, 41, 172, 62);
+		contentPane.add(lblNumberOfTrophies_1);
+		
+		clubIdField = new JTextField();
+		clubIdField.setColumns(10);
+		clubIdField.setBounds(254, 52, 165, 41);
+		contentPane.add(clubIdField);
+		
+		JLabel lblNumberOfTrophies_1_1 = new JLabel("Stadium Id = ");
+		lblNumberOfTrophies_1_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNumberOfTrophies_1_1.setBounds(35, 304, 172, 62);
+		contentPane.add(lblNumberOfTrophies_1_1);
+		
+		stadiumIdField = new JTextField();
+		stadiumIdField.setColumns(10);
+		stadiumIdField.setBounds(254, 314, 165, 41);
+		contentPane.add(stadiumIdField);
 	}
 }

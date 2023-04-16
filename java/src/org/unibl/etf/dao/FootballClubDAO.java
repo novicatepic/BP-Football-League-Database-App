@@ -8,8 +8,8 @@ import org.unibl.etf.classes.Stadium;
 public interface FootballClubDAO {
 
 	public List<FootballClub> selectAll();
-	public int insert(FootballClub s);
-	public int update(FootballClub s);
-	public int delete(FootballClub s);
+	public int insert(FootballClub f);
+	public int update(FootballClub f);
+	public int delete(FootballClub f);
 	
 }

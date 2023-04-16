@@ -11,7 +11,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+
+import org.unibl.etf.classes.Stadium;
 
 public class NewStadiumWindow extends JFrame {
 
@@ -22,12 +25,13 @@ public class NewStadiumWindow extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	private static NewStadiumWindow stadiumFrame;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					NewStadiumWindow frame = new NewStadiumWindow();
-					frame.setVisible(true);
+					stadiumFrame = new NewStadiumWindow();
+					stadiumFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -35,6 +39,11 @@ public class NewStadiumWindow extends JFrame {
 		});
 	}
 
+	private StadiumGui frame;
+	public void setStadiumFrame(StadiumGui frame) {
+		this.frame = frame;
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -81,7 +90,22 @@ public class NewStadiumWindow extends JFrame {
 		JButton saveButton = new JButton("SAVE");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				String name = nameField.getText();
+				int capacity = Integer.valueOf(dateField.getText());
+				String town = trophiesWonField.getText();
+				Stadium s = new Stadium();
+				s.setNaziv(name);
+				s.setKapacitet(capacity);
+				s.setGrad(town);
+				frame.insert(s);
+				try {
+					Thread.sleep(1000);
+				} catch(InterruptedException ex) {
+					ex.printStackTrace();
+				}
+				frame.dispose();
+				StadiumGui sg = new StadiumGui();
+				sg.setVisible(true);
 			}
 		});
 		saveButton.setBounds(35, 399, 643, 57);
