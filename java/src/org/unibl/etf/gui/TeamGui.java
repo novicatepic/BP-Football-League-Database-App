@@ -37,6 +37,7 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 	private JPanel contentPane;
 	public static int NUM_TEAMS;
 	private JLabel[][] labels;/* labels = new JLabel[NUM_TEAMS][5];*/
+	private JButton[][] buttons;
 	private static TeamGui frame;
 	/**
 	 * Launch the application.
@@ -54,6 +55,10 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 		});
 	}
 
+	public void setFrame(TeamGui frame2) {
+		frame= frame2;
+	}
+	
 	public List<FootballClub> getData() {
 		return clubs;
 	}
@@ -69,9 +74,13 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 		for(FootballClub s : clubs) {
 			System.out.println(s);
 		}
+		/*for(Stadium s : stadiums) {
+			System.out.println(s);
+		}*/
 		NUM_TEAMS = clubs.size();
+		buttons = new JButton[NUM_TEAMS][2];
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 881, 595);
+		setBounds(100, 100, 1151, 595);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		contentPane = new JPanel();
@@ -93,32 +102,8 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 		addButton.setBounds(76, 474, 116, 44);
 		contentPane.add(addButton);
 		
-		JButton changeButton = new JButton("Change club");
-		changeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ChangeTeamWindow ctw = new ChangeTeamWindow();
-				ctw.setTeamFrame(frame);
-				ctw.passStadiums(stadiums);
-				ctw.setVisible(true);
-			}
-		});
-		changeButton.setBounds(323, 474, 116, 44);
-		contentPane.add(changeButton);
-		
-		JButton deleteButton = new JButton("Delete club");
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				DeleteClubWindow deleteClubWindow = new DeleteClubWindow();				
-				deleteClubWindow.setStadiumFrame(frame);
-				deleteClubWindow.populateData();
-				deleteClubWindow.setVisible(true);
-			}
-		});
-		deleteButton.setBounds(588, 474, 116, 44);
-		contentPane.add(deleteButton);
-		
 		JPanel panel = new JPanel();
-		panel.setBounds(57, 85, 800, 373);
+		panel.setBounds(57, 85, 1070, 373);
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(NUM_TEAMS, 4));
 		
@@ -129,6 +114,21 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 		for(int i = 0; i < NUM_TEAMS; i++) {
 			for(int j = 0; j < 5; j++) {
 				labels[i][j] = new JLabel();
+			}
+		}
+		
+		for(int i = 0; i < NUM_TEAMS; i++) {
+			buttons[i] = new JButton[2];
+		}
+		
+		for(int i = 0; i < NUM_TEAMS; i++) {
+			for(int j = 0; j < 2; j++) {
+				buttons[i][j] = new JButton();
+				if(j==0) {
+					buttons[i][j].setText("CHANGE");
+				} else {
+					buttons[i][j].setText("DELETE");
+				}
 			}
 		}
 		
@@ -155,37 +155,93 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 						j++;
 						break;
 					case 4:
-						labels[i][j].setText(String.valueOf(clubs.get(i).getStadionId()));
+						for(Stadium s : stadiums) {
+							if(s.getStadionId() == clubs.get(i).getStadionId()) {
+								labels[i][j].setText(s.getNaziv());
+							}
+						}
+						//labels[i][j].setText(String.valueOf(clubs.get(i).getStadionId()));
 						break;
 				}
 				}
 		}
 		
 		for(int i = 0; i < NUM_TEAMS; i++) {
-			for(int j = 0; j < 5; j++) {
-				panel.add(labels[i][j]);
+			for(int j = 0; j < 7; j++) {
+				if(j<5) {
+					panel.add(labels[i][j]);
+				} else {
+					panel.add(buttons[i][j-5]);
+				}
+			}		
+		}
+		
+		for(int i = 0; i < NUM_TEAMS; i++) {
+			for(int j = 0; j < 2; j++) {
+				final int temp = i;
+				if(j == 0) {							
+					buttons[i][j].addActionListener(new ActionListener() {						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							for(Stadium s : stadiums) {
+								System.out.println(s);
+							}
+							ChangeTeamWindow ctw = new ChangeTeamWindow();
+							ctw.setTeamFrame(frame);
+							ctw.setTeamId(Integer.valueOf(labels[temp][0].getText()));
+							ctw.passStadiums(stadiums);
+							ctw.addStadiumsToCB();
+							ctw.clickButton();
+							ctw.setVisible(true);
+						}
+					});
+				} else {
+					buttons[i][j].addActionListener(new ActionListener() {						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							int id = Integer.valueOf(labels[temp][0].getText());
+
+							FootballClub s = null;
+							for(FootballClub stad : clubs) {
+								if(stad.getIdKluba() == Integer.valueOf(id)) {
+									s = stad;
+								}
+							}
+							if(s != null) {
+								frame.delete(s);
+								try {
+									Thread.sleep(1000);
+								} catch(InterruptedException ex) {
+									ex.printStackTrace();
+								}
+								frame.dispose();
+								TeamGui sg = new TeamGui();
+								sg.setVisible(true);
+							}
+						}
+					});
+				}
 			}
-			
 		}
 		
 		JLabel lblNewLabel = new JLabel("NAME");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(227, 60, 66, 27);
+		lblNewLabel.setBounds(207, 60, 66, 27);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblFoundationDate = new JLabel("DATE");
 		lblFoundationDate.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFoundationDate.setBounds(361, 60, 85, 27);
+		lblFoundationDate.setBounds(341, 60, 85, 27);
 		contentPane.add(lblFoundationDate);
 		
 		JLabel lblNumtrophies = new JLabel("NUM_TROPHIES");
 		lblNumtrophies.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNumtrophies.setBounds(506, 60, 85, 27);
+		lblNumtrophies.setBounds(486, 60, 85, 27);
 		contentPane.add(lblNumtrophies);
 		
 		JLabel lblStadiumname = new JLabel("STADIUM_NAME");
 		lblStadiumname.setHorizontalAlignment(SwingConstants.CENTER);
-		lblStadiumname.setBounds(672, 60, 85, 27);
+		lblStadiumname.setBounds(642, 60, 85, 27);
 		contentPane.add(lblStadiumname);
 		
 		JLabel lblNewLabel_1 = new JLabel("TEAMS");
@@ -196,15 +252,8 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 		
 		JLabel lblId = new JLabel("Id");
 		lblId.setHorizontalAlignment(SwingConstants.CENTER);
-		lblId.setBounds(78, 60, 66, 27);
-		contentPane.add(lblId);
-		
-		/*for(int i = 0; i < NUM_TEAMS; i++) {
-			for(int j = 0; j < 4; j++) {
-				chooseTeamBox.addItem(new String(labels[i][j].getText()));
-			}
-		}*/
-		
+		lblId.setBounds(57, 60, 66, 27);
+		contentPane.add(lblId);	
 	}
 
 	@Override

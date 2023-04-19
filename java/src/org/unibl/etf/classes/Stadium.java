@@ -55,8 +55,7 @@ public class Stadium implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Stadium [stadionId=" + stadionId + ", naziv=" + naziv + ", kapacitet=" + kapacitet + ", grad=" + grad
-				+ "]";
+		return naziv;
 	}
 	
 	

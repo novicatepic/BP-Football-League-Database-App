@@ -52,6 +52,7 @@ public class Gui extends JFrame {
 		clubButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				TeamGui teamGui = new TeamGui();
+				teamGui.setFrame(teamGui);
 				teamGui.setVisible(true);
 			}
 		});
@@ -65,6 +66,7 @@ public class Gui extends JFrame {
 		stadiumButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StadiumGui stadiumGui = new StadiumGui();
+				stadiumGui.setFrame(stadiumGui);
 				stadiumGui.setVisible(true);
 			}
 		});

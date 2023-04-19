@@ -36,6 +36,7 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 	private static int NUM_TEAMS;
 	private static StadiumGui frame;
 	private JLabel[][] labels;/* = new JLabel[NUM_TEAMS][4];*/
+	private JButton[][] buttons;
 	/**
 	 * Launch the application.
 	 */
@@ -52,6 +53,10 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 		});
 	}
 
+	public void setFrame(StadiumGui frame2) {
+		frame = frame2;
+	}
+	
 	public List<Stadium> getData() {
 		return stadiums;
 	}
@@ -66,9 +71,11 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 			System.out.println(s);
 		}
 		NUM_TEAMS = stadiums.size();
+
 		labels = new JLabel[NUM_TEAMS][4];
+		buttons = new JButton[NUM_TEAMS][2];
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				setBounds(100, 100, 752, 595);
+				setBounds(100, 100, 1200, 595);
 				setResizable(false);
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				contentPane = new JPanel();
@@ -88,42 +95,33 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				addButton.setBounds(76, 474, 116, 44);
 				contentPane.add(addButton);
 				
-				JButton changeButton = new JButton("Change stadium");
-				changeButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						ChangeStadiumWindow csw = new ChangeStadiumWindow();
-						csw.setStadiumFrame(frame);
-						csw.setVisible(true);
-						
-					}
-				});
-				changeButton.setBounds(323, 474, 116, 44);
-				contentPane.add(changeButton);
-				
-				JButton deleteButton = new JButton("Delete stadium");
-				deleteButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						DeleteStadiumWindow dsw = new DeleteStadiumWindow();
-						dsw.setStadiumFrame(frame);
-						dsw.populateData();
-						dsw.setVisible(true);
-					}
-				});
-				deleteButton.setBounds(588, 474, 116, 44);
-				contentPane.add(deleteButton);
-				
 				JPanel panel = new JPanel();
-				panel.setBounds(57, 92, 671, 366);
+				panel.setBounds(57, 92, 939, 366);
 				contentPane.add(panel);
-				panel.setLayout(new GridLayout(NUM_TEAMS, 4));
+				panel.setLayout(new GridLayout(NUM_TEAMS, 6));
 				
 				for(int i = 0; i < NUM_TEAMS; i++) {
 					labels[i] = new JLabel[4];
 				}
 				
 				for(int i = 0; i < NUM_TEAMS; i++) {
+					buttons[i] = new JButton[2];
+				}
+				
+				for(int i = 0; i < NUM_TEAMS; i++) {
 					for(int j = 0; j < 4; j++) {
 						labels[i][j] = new JLabel();
+					}
+				}
+				
+				for(int i = 0; i < NUM_TEAMS; i++) {
+					for(int j = 0; j < 2; j++) {
+						buttons[i][j] = new JButton();
+						if(j==0) {
+							buttons[i][j].setText("CHANGE");
+						} else {
+							buttons[i][j].setText("DELETE");
+						}
 					}
 				}
 				
@@ -153,10 +151,55 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				}
 				
 				for(int i = 0; i < NUM_TEAMS; i++) {
-					for(int j = 0; j < 4; j++) {
-						panel.add(labels[i][j]);
+					for(int j = 0; j < 6; j++) {
+						if(j<4) {
+							panel.add(labels[i][j]);
+						} else {
+							panel.add(buttons[i][j-4]);
+						}
+					}					
+				}
+				
+				for(int i = 0; i < NUM_TEAMS; i++) {
+					for(int j = 0; j < 2; j++) {
+						final int temp = i;
+						if(j == 0) {							
+							buttons[i][j].addActionListener(new ActionListener() {						
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									ChangeStadiumWindow csw = new ChangeStadiumWindow();
+									csw.setStadiumFrame(frame);
+									csw.setStadiumId(Integer.valueOf(labels[temp][0].getText()));
+									csw.setVisible(true);
+								}
+							});
+						} else {
+							buttons[i][j].addActionListener(new ActionListener() {						
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									int id = Integer.valueOf(labels[temp][0].getText());
+									
+									Stadium s = null;
+									for(Stadium stad : stadiums) {
+										if(stad.getStadionId() == id) {
+											s = stad;
+										}
+									}
+									if(s != null) {
+										frame.delete(s);
+										try {
+											Thread.sleep(1000);
+										} catch(InterruptedException ex) {
+											ex.printStackTrace();
+										}
+										frame.dispose();
+										StadiumGui sg = new StadiumGui();
+										sg.setVisible(true);
+									}
+								}
+							});
+						}
 					}
-					
 				}
 				
 				JLabel lblNewLabel = new JLabel("ID");

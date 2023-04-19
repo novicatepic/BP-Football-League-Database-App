@@ -43,7 +43,7 @@ public class NewTeamWindow extends JFrame {
 	private JComboBox chooseStadiumBox;
 	public void populateData() {
 		for(Stadium s : stadiums) {
-			chooseStadiumBox.addItem(new String(String.valueOf(s.getStadionId())));
+			chooseStadiumBox.addItem(s);
 		}
 	}
 	
@@ -130,9 +130,10 @@ public class NewTeamWindow extends JFrame {
 					s.setNaziv(name);
 					s.setDatumOsnivanja(date);
 					s.setBrojOsvojenihTrofeja(numTrophiesWon);
-					String id = String.valueOf(chooseStadiumBox.getSelectedItem());
-					int realId = Integer.valueOf(id);
-					s.setStadionId(realId);
+					/*String id = String.valueOf(chooseStadiumBox.getSelectedItem());
+					int realId = Integer.valueOf(id);*/
+					Stadium stadium = (Stadium)chooseStadiumBox.getSelectedItem();
+					s.setStadionId(stadium.getStadionId());
 					frame.insert(s);
 					try {
 						Thread.sleep(1000);

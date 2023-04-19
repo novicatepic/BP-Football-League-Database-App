@@ -40,11 +40,14 @@ public class ChangeStadiumWindow extends JFrame {
 	}
 
 	private StadiumGui frame;
-	private JTextField idField;
 	public void setStadiumFrame(StadiumGui frame) {
 		this.frame = frame;
 	}
-
+	private int id;
+	public void setStadiumId(int id) {
+		this.id = id;
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -60,32 +63,32 @@ public class ChangeStadiumWindow extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Name = ");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(35, 129, 172, 62);
+		lblNewLabel.setBounds(35, 78, 172, 62);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblFoundatioDate = new JLabel("Capacity = ");
 		lblFoundatioDate.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFoundatioDate.setBounds(35, 192, 172, 62);
+		lblFoundatioDate.setBounds(45, 150, 172, 62);
 		contentPane.add(lblFoundatioDate);
 		
 		JLabel lblNumberOfTrophies = new JLabel("Town = ");
 		lblNumberOfTrophies.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNumberOfTrophies.setBounds(35, 250, 172, 62);
+		lblNumberOfTrophies.setBounds(35, 222, 172, 62);
 		contentPane.add(lblNumberOfTrophies);
 		
 		nameField = new JTextField();
-		nameField.setBounds(254, 140, 165, 41);
+		nameField.setBounds(254, 89, 165, 41);
 		contentPane.add(nameField);
 		nameField.setColumns(10);
 		
 		capacityField = new JTextField();
 		capacityField.setColumns(10);
-		capacityField.setBounds(254, 203, 165, 41);
+		capacityField.setBounds(254, 161, 165, 41);
 		contentPane.add(capacityField);
 		
 		townField = new JTextField();
 		townField.setColumns(10);
-		townField.setBounds(254, 261, 165, 41);
+		townField.setBounds(254, 233, 165, 41);
 		contentPane.add(townField);
 		
 		JButton saveButton = new JButton("SAVE");
@@ -94,7 +97,7 @@ public class ChangeStadiumWindow extends JFrame {
 				List<Stadium> data = frame.getData();
 				Stadium s = null;
 				for(Stadium stad : data) {
-					if(stad.getStadionId() == Integer.valueOf(idField.getText())) {
+					if(stad.getStadionId() == id) {
 						s = stad;
 					}
 				}
@@ -134,15 +137,5 @@ public class ChangeStadiumWindow extends JFrame {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setBounds(35, 10, 642, 29);
 		contentPane.add(lblNewLabel_1);
-		
-		JLabel lblNumberOfTrophies_1 = new JLabel("Id = ");
-		lblNumberOfTrophies_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNumberOfTrophies_1.setBounds(35, 72, 172, 62);
-		contentPane.add(lblNumberOfTrophies_1);
-		
-		idField = new JTextField();
-		idField.setColumns(10);
-		idField.setBounds(254, 83, 165, 41);
-		contentPane.add(idField);
 	}
 }
