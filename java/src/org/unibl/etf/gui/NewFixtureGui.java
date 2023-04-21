@@ -17,7 +17,8 @@ public class NewFixtureGui extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField newDateField;
-	private JTextField resultField;
+	private JTextField homeTeamGoalsField;
+	private JTextField awayTeamGoalsField;
 	/**
 	 * Launch the application.
 	 */
@@ -39,7 +40,7 @@ public class NewFixtureGui extends JFrame {
 	 */
 	public NewFixtureGui() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 723, 503);
+		setBounds(100, 100, 1151, 741);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -49,31 +50,31 @@ public class NewFixtureGui extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Date = ");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(35, 35, 172, 62);
+		lblNewLabel.setBounds(35, 117, 172, 62);
 		contentPane.add(lblNewLabel);
 		
-		JLabel lblFoundatioDate = new JLabel("Result = ");
+		JLabel lblFoundatioDate = new JLabel("Home team goals = ");
 		lblFoundatioDate.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFoundatioDate.setBounds(35, 147, 172, 62);
+		lblFoundatioDate.setBounds(35, 284, 172, 62);
 		contentPane.add(lblFoundatioDate);
 		
 		newDateField = new JTextField();
-		newDateField.setBounds(254, 49, 165, 41);
+		newDateField.setBounds(217, 128, 165, 41);
 		contentPane.add(newDateField);
 		newDateField.setColumns(10);
 		
-		resultField = new JTextField();
-		resultField.setColumns(10);
-		resultField.setBounds(254, 154, 165, 41);
-		contentPane.add(resultField);
+		homeTeamGoalsField = new JTextField();
+		homeTeamGoalsField.setColumns(10);
+		homeTeamGoalsField.setBounds(217, 295, 165, 41);
+		contentPane.add(homeTeamGoalsField);
 		
-		JComboBox chooseStadiumBox = new JComboBox();
-		chooseStadiumBox.setBounds(254, 252, 29, 21);
-		contentPane.add(chooseStadiumBox);
+		JComboBox chooseHomeTeamBox = new JComboBox();
+		chooseHomeTeamBox.setBounds(868, 95, 68, 21);
+		contentPane.add(chooseHomeTeamBox);
 		
 		JLabel lblChooseStadium = new JLabel("Home team = ");
 		lblChooseStadium.setHorizontalAlignment(SwingConstants.CENTER);
-		lblChooseStadium.setBounds(45, 231, 172, 62);
+		lblChooseStadium.setBounds(709, 74, 172, 62);
 		contentPane.add(lblChooseStadium);
 		
 		JButton saveButton = new JButton("SAVE");
@@ -82,17 +83,44 @@ public class NewFixtureGui extends JFrame {
 				
 			}
 		});
-		saveButton.setBounds(35, 399, 643, 57);
+		saveButton.setBounds(254, 620, 643, 57);
 		contentPane.add(saveButton);
 		
 		JLabel lblAwayTeam = new JLabel("Away team = ");
 		lblAwayTeam.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAwayTeam.setBounds(368, 231, 172, 62);
+		lblAwayTeam.setBounds(709, 179, 172, 62);
 		contentPane.add(lblAwayTeam);
 		
-		JComboBox chooseStadiumBox_1 = new JComboBox();
-		chooseStadiumBox_1.setBounds(575, 252, 29, 21);
-		contentPane.add(chooseStadiumBox_1);
+		JComboBox chooseAwayTeamBox = new JComboBox();
+		chooseAwayTeamBox.setBounds(868, 200, 68, 21);
+		contentPane.add(chooseAwayTeamBox);
+		
+		JComboBox chooseFixtureBox = new JComboBox();
+		chooseFixtureBox.setBounds(217, 49, 132, 34);
+		contentPane.add(chooseFixtureBox);
+		
+		JLabel lblFixtureNum = new JLabel("Fixture num = ");
+		lblFixtureNum.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFixtureNum.setBounds(35, 35, 172, 62);
+		contentPane.add(lblFixtureNum);
+		
+		JLabel lblReferee = new JLabel("Referee = ");
+		lblReferee.setHorizontalAlignment(SwingConstants.CENTER);
+		lblReferee.setBounds(35, 204, 172, 62);
+		contentPane.add(lblReferee);
+		
+		JComboBox refereeBox = new JComboBox();
+		refereeBox.setBounds(217, 218, 132, 34);
+		contentPane.add(refereeBox);
+		
+		JLabel lblAwayTeamGoals = new JLabel("Away team goals = ");
+		lblAwayTeamGoals.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAwayTeamGoals.setBounds(35, 370, 172, 62);
+		contentPane.add(lblAwayTeamGoals);
+		
+		awayTeamGoalsField = new JTextField();
+		awayTeamGoalsField.setColumns(10);
+		awayTeamGoalsField.setBounds(217, 378, 165, 41);
+		contentPane.add(awayTeamGoalsField);
 	}
-
 }

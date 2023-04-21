@@ -25,12 +25,12 @@ public class NewStadiumWindow extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	private static NewStadiumWindow stadiumFrame;
+	//private static NewStadiumWindow stadiumFrame;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					stadiumFrame = new NewStadiumWindow();
+					NewStadiumWindow stadiumFrame = new NewStadiumWindow();
 					stadiumFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,6 +42,11 @@ public class NewStadiumWindow extends JFrame {
 	private StadiumGui frame;
 	public void setStadiumFrame(StadiumGui frame) {
 		this.frame = frame;
+	}
+	
+	private NewStadiumWindow stadiumFrame;
+	public void setNewStadiumFrame(NewStadiumWindow frame) {
+		stadiumFrame = frame;
 	}
 	
 	/**
@@ -103,8 +108,10 @@ public class NewStadiumWindow extends JFrame {
 				} catch(InterruptedException ex) {
 					ex.printStackTrace();
 				}
+				stadiumFrame.dispose();
 				frame.dispose();
 				StadiumGui sg = new StadiumGui();
+				sg.setFrame(sg);
 				sg.setVisible(true);
 			}
 		});

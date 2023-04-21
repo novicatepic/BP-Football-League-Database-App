@@ -47,6 +47,11 @@ public class NewTeamWindow extends JFrame {
 		}
 	}
 	
+	private NewTeamWindow teamFrame;
+	public void setTeamFrame(NewTeamWindow frame) {
+		teamFrame = frame;
+	}
+	
 	/**
 	 * Launch the application.
 	 */
@@ -141,7 +146,9 @@ public class NewTeamWindow extends JFrame {
 						ex.printStackTrace();
 					}
 					frame.dispose();
+					teamFrame.dispose();
 					TeamGui sg = new TeamGui();
+					sg.setFrame(sg);
 					sg.setVisible(true);
 				} catch(Exception e1) {
 					e1.printStackTrace();

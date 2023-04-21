@@ -58,10 +58,25 @@ public class ChangeTeamWindow extends JFrame {
 		this.frame = frame;
 	}
 	
-	public void addStadiumsToCB() {
+	private ChangeTeamWindow teamFrame;
+	public void setTeamChangeFrame(ChangeTeamWindow frame) {
+		this.teamFrame = frame;
+	}
+	
+	public void addData() {
 		for(Stadium s : stadiums) {
 			chooseStadiumBox.addItem(s);
 		}
+		List<FootballClub> data = frame.getData();
+		FootballClub s = null;
+		for(FootballClub stad : data) {
+			if(stad.getIdKluba() == id) {
+				s = stad;
+			}
+		}
+		nameField.setText(s.getNaziv());
+		dateField.setText(s.getDatumOsnivanja().toString());
+		trophiesWonField.setText(String.valueOf(s.getBrojOsvojenihTrofeja()));
 	}
 	
 	public void clickButton() {
@@ -95,7 +110,7 @@ public class ChangeTeamWindow extends JFrame {
 		lblNumberOfTrophies.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNumberOfTrophies.setBounds(35, 208, 172, 62);
 		contentPane.add(lblNumberOfTrophies);
-		
+			
 		nameField = new JTextField();
 		nameField.setBounds(254, 75, 165, 41);
 		contentPane.add(nameField);
@@ -114,8 +129,6 @@ public class ChangeTeamWindow extends JFrame {
 		chooseStadiumBox = new JComboBox();
 		chooseStadiumBox.setBounds(585, 130, 93, 21);
 		contentPane.add(chooseStadiumBox);
-		
-		
 		
 		JLabel lblChooseStadium = new JLabel("Choose stadium = ");
 		lblChooseStadium.setHorizontalAlignment(SwingConstants.CENTER);
@@ -143,11 +156,11 @@ public class ChangeTeamWindow extends JFrame {
 					}
 					if(s != null) {
 						boolean anything = false;
-						if(!"".equals(nameField.getText())) {
+						if(!s.getNaziv().equals(nameField.getText())) {
 							s.setNaziv(nameField.getText());
 							anything = true;
 						}
-						if(!"".equals(dateField.getText())) {
+						if(!s.getDatumOsnivanja().toString().equals(dateField.getText())) {
 							String[] dateFieldParse = dateField.getText().split("-");
 							if(dateFieldParse.length != 3) {
 								throw new Exception("Problem!");
@@ -156,7 +169,7 @@ public class ChangeTeamWindow extends JFrame {
 							s.setDatumOsnivanja(date);
 							anything = true;
 						}
-						if(!"".equals(trophiesWonField.getText())) {
+						if(!String.valueOf(s.getBrojOsvojenihTrofeja()).equals(trophiesWonField.getText())) {
 							s.setBrojOsvojenihTrofeja(Integer.valueOf(trophiesWonField.getText()));
 							anything = true;
 						}
@@ -172,7 +185,9 @@ public class ChangeTeamWindow extends JFrame {
 								ex.printStackTrace();
 							}
 							frame.dispose();
+							teamFrame.dispose();
 							TeamGui sg = new TeamGui();
+							sg.setFrame(sg);
 							sg.setVisible(true);
 						}
 					}

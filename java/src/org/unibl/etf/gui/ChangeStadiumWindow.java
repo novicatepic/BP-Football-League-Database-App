@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.unibl.etf.classes.FootballClub;
 import org.unibl.etf.classes.Stadium;
 
 public class ChangeStadiumWindow extends JFrame {
@@ -48,6 +49,23 @@ public class ChangeStadiumWindow extends JFrame {
 		this.id = id;
 	}
 	
+	public void setData() {
+		List<Stadium> data = frame.getData();
+		Stadium s = null;
+		for(Stadium stad : data) {
+			if(stad.getStadionId() == id) {
+				s = stad;
+			}
+		}
+		nameField.setText(s.getNaziv());
+		capacityField.setText(String.valueOf(s.getKapacitet()));
+		townField.setText(s.getGrad());
+	}
+	
+	private ChangeStadiumWindow changeFrame;
+	public void setChangeStadiumFrame(ChangeStadiumWindow frame) {
+		changeFrame = frame;
+	}
 	/**
 	 * Create the frame.
 	 */
@@ -103,15 +121,15 @@ public class ChangeStadiumWindow extends JFrame {
 				}
 				if(s != null) {
 					boolean anything = false;
-					if(!"".equals(nameField.getText())) {
+					if(!s.getNaziv().equals(nameField.getText())) {
 						s.setNaziv(nameField.getText());
 						anything = true;
 					}
-					if(!"".equals(capacityField.getText())) {
+					if(!String.valueOf(s.getKapacitet()).equals(capacityField.getText())) {
 						s.setKapacitet(Integer.valueOf(capacityField.getText()));
 						anything = true;
 					}
-					if(!"".equals(townField.getText())) {
+					if(!s.getGrad().equals(townField.getText())) {
 						s.setGrad(townField.getText());
 						anything = true;
 					}
@@ -122,8 +140,10 @@ public class ChangeStadiumWindow extends JFrame {
 						} catch(InterruptedException ex) {
 							ex.printStackTrace();
 						}
+						changeFrame.dispose();
 						frame.dispose();
 						StadiumGui sg = new StadiumGui();
+						sg.setFrame(sg);
 						sg.setVisible(true);
 					}
 				}

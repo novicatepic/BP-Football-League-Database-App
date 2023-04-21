@@ -1,5 +1,8 @@
 package org.unibl.etf.gui;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import javax.swing.JScrollPane;
 
 public class StadiumGui extends JFrame implements StadiumDAO {
 
@@ -44,7 +48,7 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frame = new StadiumGui();
+					StadiumGui frame = new StadiumGui();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -75,7 +79,7 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 		labels = new JLabel[NUM_TEAMS][4];
 		buttons = new JButton[NUM_TEAMS][2];
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				setBounds(100, 100, 1200, 595);
+				setBounds(100, 100, 1076, 799);
 				setResizable(false);
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				contentPane = new JPanel();
@@ -89,14 +93,15 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 					public void actionPerformed(ActionEvent e) {
 						NewStadiumWindow nsw = new NewStadiumWindow();
 						nsw.setStadiumFrame(frame);
+						nsw.setNewStadiumFrame(nsw);
 						nsw.setVisible(true);
 					}
 				});
-				addButton.setBounds(76, 474, 116, 44);
+				addButton.setBounds(71, 708, 116, 44);
 				contentPane.add(addButton);
 				
-				JPanel panel = new JPanel();
-				panel.setBounds(57, 92, 939, 366);
+				panel = new JPanel();
+				panel.setBounds(57, 79, 939, 632);
 				contentPane.add(panel);
 				panel.setLayout(new GridLayout(NUM_TEAMS, 6));
 				
@@ -169,7 +174,9 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 								public void actionPerformed(ActionEvent e) {
 									ChangeStadiumWindow csw = new ChangeStadiumWindow();
 									csw.setStadiumFrame(frame);
+									csw.setChangeStadiumFrame(csw);
 									csw.setStadiumId(Integer.valueOf(labels[temp][0].getText()));
+									csw.setData();
 									csw.setVisible(true);
 								}
 							});
@@ -194,6 +201,7 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 										}
 										frame.dispose();
 										StadiumGui sg = new StadiumGui();
+										sg.setFrame(sg);
 										sg.setVisible(true);
 									}
 								}
@@ -226,10 +234,34 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 				lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 				lblNewLabel_1.setBounds(56, 11, 611, 27);
-				contentPane.add(lblNewLabel_1);
+				contentPane.add(lblNewLabel_1);			
 				
-				
-				
+				//scrollPane.setBounds(50, 30, 300, 50);
+				//scrollPane.add(contentPane);
+		        
+	}
+	private JScrollPane scrollPane;
+	private JPanel panel;
+	public void setScrollBar() {
+		/*Container container = panel; // get the container that holds the grid
+		GridLayout gridLayout = (GridLayout) container.getLayout();
+
+		// get the current size of the container
+		Dimension containerSize = container.getSize();
+
+		// calculate the number of rows that can fit in the container
+		Component component = container.getComponent(0); // use the first component in the grid
+		Dimension componentPreferredSize = component.getPreferredSize();
+		int numRows = containerSize.height / componentPreferredSize.height;
+
+		// update the grid layout with the new number of rows
+		gridLayout.setRows(numRows);
+
+		// repaint the container to update the display
+		container.repaint();*/
+		//scrollPane = new JScrollPane(contentPane, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		//frame.add(scrollPane);
+		//scrollPane.add();
 	}
 
 	@Override
@@ -321,5 +353,4 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 		}
 		return retVal;
 	}
-
 }

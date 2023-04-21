@@ -67,6 +67,7 @@ public class Gui extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				StadiumGui stadiumGui = new StadiumGui();
 				stadiumGui.setFrame(stadiumGui);
+				//stadiumGui.setScrollBar();
 				stadiumGui.setVisible(true);
 			}
 		});

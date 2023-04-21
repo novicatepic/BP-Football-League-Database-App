@@ -29,10 +29,10 @@ import java.awt.Font;
 
 public class TeamGui extends JFrame implements FootballClubDAO {
 
-	private static final String SQL_SELECT_ALL = "SELECT * FROM fudblaski_klub";
-	private static final String SQL_INSERT = "INSERT INTO fudblaski_klub (IdKluba, Naziv, DatumOsnivanja, BrojOsvojenihTrofeja, StadionId) VALUES (null, ?, ?, ?, ?)";
-	private static final String SQL_UPDATE = "UPDATE fudblaski_klub SET Naziv=?, DatumOsnivanja=?, BrojOsvojenihTrofeja=?, StadionId=? WHERE IdKluba=?";
-	private static final String SQL_DELETE = "DELETE FROM fudblaski_klub WHERE IdKluba=?";
+	private static final String SQL_SELECT_ALL = "SELECT * FROM fudbalski_klub";
+	private static final String SQL_INSERT = "INSERT INTO fudbalski_klub (IdKluba, Naziv, DatumOsnivanja, BrojOsvojenihTrofeja, STADION_StadioId) VALUES (null, ?, ?, ?, ?)";
+	private static final String SQL_UPDATE = "UPDATE fudbalski_klub SET Naziv=?, DatumOsnivanja=?, BrojOsvojenihTrofeja=?, STADION_StadioId=? WHERE IdKluba=?";
+	private static final String SQL_DELETE = "DELETE FROM fudbalski_klub WHERE IdKluba=?";
 	private static final String SQL_SELECT_ALL_STADIUMS = "SELECT * FROM stadion";
 	private JPanel contentPane;
 	public static int NUM_TEAMS;
@@ -80,7 +80,7 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 		NUM_TEAMS = clubs.size();
 		buttons = new JButton[NUM_TEAMS][2];
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1151, 595);
+		setBounds(100, 100, 1151, 786);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		contentPane = new JPanel();
@@ -94,16 +94,17 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 			public void actionPerformed(ActionEvent e) {
 				NewTeamWindow ntw = new NewTeamWindow();
 				ntw.setTeamFrame(frame);
+				ntw.setTeamFrame(ntw);
 				ntw.passStadiums(stadiums);
 				ntw.populateData();
 				ntw.setVisible(true);
 			}
 		});
-		addButton.setBounds(76, 474, 116, 44);
+		addButton.setBounds(57, 695, 116, 44);
 		contentPane.add(addButton);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(57, 85, 1070, 373);
+		panel.setBounds(57, 85, 1070, 611);
 		contentPane.add(panel);
 		panel.setLayout(new GridLayout(NUM_TEAMS, 4));
 		
@@ -190,7 +191,8 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 							ctw.setTeamFrame(frame);
 							ctw.setTeamId(Integer.valueOf(labels[temp][0].getText()));
 							ctw.passStadiums(stadiums);
-							ctw.addStadiumsToCB();
+							ctw.addData();
+							ctw.setTeamChangeFrame(ctw);
 							ctw.clickButton();
 							ctw.setVisible(true);
 						}
@@ -216,6 +218,7 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 								}
 								frame.dispose();
 								TeamGui sg = new TeamGui();
+								sg.setFrame(sg);
 								sg.setVisible(true);
 							}
 						}
@@ -270,7 +273,7 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 
 			while (rs.next()) {
 				retVal.add(new FootballClub(rs.getInt("IdKluba"), rs.getString("Naziv"), rs.getDate("DatumOsnivanja"),
-						rs.getInt("BrojOsvojenihTrofeja"), rs.getInt("StadionId")));
+						rs.getInt("BrojOsvojenihTrofeja"), rs.getInt("STADION_StadioId")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
