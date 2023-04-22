@@ -68,8 +68,7 @@ public class FootballClub implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FootballClub [idKluba=" + idKluba + ", naziv=" + naziv + ", datumOsnivanja=" + datumOsnivanja
-				+ ", brojOsvojenihTrofeja=" + brojOsvojenihTrofeja + ", StadionId=" + StadionId + "]";
+		return naziv;
 	}
 	
 	

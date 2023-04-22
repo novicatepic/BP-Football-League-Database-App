@@ -86,6 +86,7 @@ public class Gui extends JFrame {
 		btnVisitWiners_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				FixtureShowGui fixtureGui = new FixtureShowGui();
+				fixtureGui.setFrame(fixtureGui);
 				fixtureGui.setVisible(true);
 			}
 		});

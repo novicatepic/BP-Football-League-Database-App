@@ -25,7 +25,7 @@ public class Fixture implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Fixture [brojKola=" + brojKola + "]";
+		return String.valueOf(brojKola);
 	}
 	
 	

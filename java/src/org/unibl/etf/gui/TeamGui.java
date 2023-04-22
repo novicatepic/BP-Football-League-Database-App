@@ -134,9 +134,7 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 		}
 		
 		for(int i = 0; i < NUM_TEAMS; i++) {
-			//for(int j = 0; j < 4; j++) {
 				int j=0;
-				//labels[i][j] = new JLabel();
 				for(int k = 0; k < 5; k++) {
 					switch(j) {
 					case 0:
@@ -286,7 +284,6 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 
 	@Override
 	public int insert(FootballClub i) {
-
 		int retVal = 0;
 		Connection c = null;
 		PreparedStatement ps = null;
