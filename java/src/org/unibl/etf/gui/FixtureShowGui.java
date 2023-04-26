@@ -66,7 +66,6 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 	private JPanel changeFixturePanel;
 	private JLabel lblNewLabel;
 	private JButton newFixtureButton;
-	private JButton showPlayersButton;
 	private JButton submitFixtureButton;
 	private JPanel deleteFixturePanel;
 	/**
@@ -92,6 +91,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 
 	private JButton[] changeButtons;
 	private JButton[] deleteButtons;
+	private JButton[] showPlayersButtons;
 	private JLabel[] homeTeamLabels;
 	private JLabel[] awayTeamLabels;
 	private JLabel[] dateLabels;
@@ -145,7 +145,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 		contentPane.add(gameweekBox);
 		
 		changeFixturePanel = new JPanel();
-		changeFixturePanel.setBounds(999, 193, 170, 462);
+		changeFixturePanel.setBounds(999, 193, 106, 462);
 		contentPane.add(changeFixturePanel);
 		changeFixturePanel.setLayout(new GridLayout(10, 1));
 		
@@ -170,17 +170,11 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 		newFixtureButton.setBounds(72, 665, 222, 72);
 		contentPane.add(newFixtureButton);
 		
-		showPlayersButton = new JButton("Show players");
-		showPlayersButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ShowPlayers sp = new ShowPlayers();
-				sp.setVisible(true);
-			}
-		});
-		showPlayersButton.setBounds(360, 665, 222, 72);
-		contentPane.add(showPlayersButton);
-		
 		submitFixtureButton = new JButton("Submit");
+		JPanel showPlayersPanel = new JPanel();
+		showPlayersPanel.setBounds(1210, 193, 106, 462);
+		contentPane.add(showPlayersPanel);
+		showPlayersPanel.setLayout(new GridLayout(10, 1));
 		//int length = 0;
 		submitFixtureButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {	
@@ -190,6 +184,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				resultsPanel.removeAll();
 				changeFixturePanel.removeAll();
 				deleteFixturePanel.removeAll();
+				showPlayersPanel.removeAll();
 				gameIdPanel.removeAll();
 				clubIdsPanel.removeAll();
 				Fixture fix = (Fixture)gameweekBox.getSelectedItem();
@@ -203,10 +198,12 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				datePanel.setLayout(new GridLayout(length, 1));
 				changeFixturePanel.setLayout(new GridLayout(length, 1));
 				deleteFixturePanel.setLayout(new GridLayout(length, 1));
+				showPlayersPanel.setLayout(new GridLayout(length, 1));
 				gameIdPanel.setLayout(new GridLayout(length, 1));
 				clubIdsPanel.setLayout(new GridLayout(length, 1));
 				changeButtons = new JButton[length];
 				deleteButtons = new JButton[length];
+				showPlayersButtons = new JButton[length];
 				homeTeamLabels = new JLabel[length];
 				awayTeamLabels = new JLabel[length];
 				dateLabels = new JLabel[length];
@@ -216,6 +213,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				for(int i=0; i < length; i++) {
 					changeButtons[i] = new JButton("CHANGE");
 					deleteButtons[i] = new JButton("DELETE");
+					showPlayersButtons[i] = new JButton("SHOW PLAYERS");
 					homeTeamLabels[i] = new JLabel();
 					awayTeamLabels[i] = new JLabel();
 					dateLabels[i] = new JLabel();
@@ -224,6 +222,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 					clubIdLabels[i] = new JLabel();
 				}
 				for(int i = 0; i < length; i++) {
+					showPlayersPanel.add(showPlayersButtons[i]);
 					changeFixturePanel.add(changeButtons[i]);
 					deleteFixturePanel.add(deleteButtons[i]);
 				}
@@ -313,6 +312,22 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 							sg.setVisible(true);
 						}
 					});
+					
+					showPlayersButtons[i].addActionListener(new ActionListener() {					
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							int gameId = Integer.valueOf(idLabels[temp].getText());
+							String clubId = String.valueOf(clubIdLabels[temp].getText());
+							String[] parse = clubId.split("-");
+							int homeClubId = Integer.valueOf(parse[0]);
+							int awayClubId = Integer.valueOf(parse[1]);
+							ShowPlayers sp = new ShowPlayers();
+							sp.setFrame(sp);
+							sp.setIds(homeClubId,awayClubId,gameId);
+							sp.initPlayers();
+							sp.setVisible(true);
+						}
+					});
 				}
 				
 				frame.invalidate();
@@ -324,7 +339,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 		contentPane.add(submitFixtureButton);
 		
 		deleteFixturePanel = new JPanel();
-		deleteFixturePanel.setBounds(1168, 193, 170, 462);
+		deleteFixturePanel.setBounds(1104, 193, 106, 462);
 		contentPane.add(deleteFixturePanel);
 		deleteFixturePanel.setLayout(new GridLayout(1, 0, 0, 0));
 		
@@ -362,6 +377,8 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 		lblNewLabel_1_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1_3.setBounds(151, 161, 116, 35);
 		contentPane.add(lblNewLabel_1_3);
+		
+		
 		readFixtures();
 		readGames();
 		for(Fixture f : fixtures) {
