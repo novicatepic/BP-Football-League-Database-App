@@ -71,9 +71,9 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 	public TeamGui() {
 		clubs = selectAll();
 		stadiums = selectAllStadiums();
-		for(FootballClub s : clubs) {
+		/*for(FootballClub s : clubs) {
 			System.out.println(s);
-		}
+		}*/
 		/*for(Stadium s : stadiums) {
 			System.out.println(s);
 		}*/
@@ -182,9 +182,9 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 					buttons[i][j].addActionListener(new ActionListener() {						
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							for(Stadium s : stadiums) {
+							/*for(Stadium s : stadiums) {
 								System.out.println(s);
-							}
+							}*/
 							ChangeTeamWindow ctw = new ChangeTeamWindow();
 							ctw.setTeamFrame(frame);
 							ctw.setTeamId(Integer.valueOf(labels[temp][0].getText()));

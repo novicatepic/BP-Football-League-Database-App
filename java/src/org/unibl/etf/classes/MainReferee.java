@@ -23,9 +23,14 @@ public class MainReferee implements Serializable {
 		this.sudija_sudijaId = sudija_sudijaId;
 	}
 
+	private String toPrint="";
+	public void setToPrint(String str) {
+		toPrint = str;
+	}
+	
 	@Override
 	public String toString() {
-		return "MainReferee [sudija_sudijaId=" + sudija_sudijaId + "]";
+		return toPrint;
 	}
 	
 }

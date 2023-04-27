@@ -2,6 +2,7 @@ package org.unibl.etf.classes;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Objects;
 
 import javax.xml.crypto.Data;
 
@@ -70,7 +71,21 @@ public class FootballClub implements Serializable {
 	public String toString() {
 		return naziv;
 	}
-	
-	
-	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(idKluba);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FootballClub other = (FootballClub) obj;
+		return idKluba == other.idKluba;
+	}
 }

@@ -52,6 +52,10 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 	private static final String SQL_UPDATE_TEAM_IN_GAME = "UPDATE klub_na_utakmici SET BrojPostignutihGolova=?, BrojPrimljenihGolova=? WHERE FUDBALSKI_KLUB_IdKluba=? and UTAKMICA_UtakmicaId=?";
 	private static final String SQL_DELETE_TEAM_IN_GAME = "DELETE FROM klub_na_utakmici WHERE UTAKMICA_UtakmicaId=?";
 	
+	private static final String SQL_SELECT_REFEREE_NAMES = "select s.SudijaId, s.Ime, s.Prezime from sudija s join glavni_sudija gs on s.SudijaId=gs.SUDIJA_SudijaId";
+	private static String SQL_SELECT_TEAMS_THAT_PLAYED_FIXTURE = "select f.IdKluba, f.Naziv from klub_na_utakmici k left join fudbalski_klub f on f.IdKluba=k.FUDBALSKI_KLUB_IdKluba"
+			+ " left join utakmica u on u.UtakmicaId=k.UTAKMICA_UtakmicaId where KOLO_IdKola=";
+	
 	private static String SQL_SELECT_ALL_GAMES_BASED_ON_FIXTURE = "SELECT * FROM utakmica WHERE KOLO_IdKola=";
 	private static String SQL_SELECT_TEAMS_WHO_PLAYED_BASED_ON_GAME = "SELECT * FROM klub_na_utakmici WHERE UTAKMICA_UtakmicaId=";
 	private static String SQL_SELECT_TEAM_WHO_PLAYED_BASED_ON_TEAMS = "SELECT * FROM fudbalski_klub WHERE IdKluba=";
@@ -161,9 +165,23 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				NewFixtureGui nfg = new NewFixtureGui();
 				nfg.setFixtureShowFrame(frame);
 				nfg.setFrame(nfg);
-				nfg.populateFixtures();
+				Fixture f = (Fixture)gameweekBox.getSelectedItem();
+				nfg.populateFixture(f);
 				nfg.populateMainReferees();
-				nfg.populateTeams();
+				List<String> teamsWhoPlayed = selectTeamsWhoPlayedFixture(f.getBrojKola());
+				List<FootballClub> teamsWhoPass = new ArrayList<>();
+				for(FootballClub fc : teams) {
+					boolean found = false;
+					for(String twp : teamsWhoPlayed) {
+						if(fc.getIdKluba() == Integer.valueOf(twp)) {
+							found = true;
+						}
+					}
+					if(!found) {
+						teamsWhoPass.add(fc);
+					}
+				}
+				nfg.populateTeams(teamsWhoPass);
 				nfg.setVisible(true);
 			}
 		});
@@ -191,7 +209,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				//System.out.println(fix.getBrojKola());
 				List<Game> gamesInFixture = selectGamesBasedOnFixture(fix.getBrojKola());
 				int length = gamesInFixture.size();
-				System.out.println("LENDZ="+length);
+				//System.out.println("LENDZ="+length);
 				homeTeamsPanel.setLayout(new GridLayout(length, 1));
 				awayTeamsPanel.setLayout(new GridLayout(length, 1));
 				resultsPanel.setLayout(new GridLayout(length, 1));
@@ -386,24 +404,45 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 		}
 		
 		readReferees();
-		for(Referee ref : referees) {
+		/*for(Referee ref : referees) {
 			System.out.println(ref);
-		}
+		}*/
 		
 		readMainReferees();
-		for(MainReferee ref : mainReferees) {
+		/*for(MainReferee ref : mainReferees) {
 			System.out.println(ref);
-		}
+		}*/
+		/*for(MainReferee mr : mainReferees) {
+			for(Referee r : referees) {
+				if(r.getSudijaId() ==)
+			}
+		}*/
 		
 		readClubs();
-		for(FootballClub f : teams) {
+		
+		List<String> refNames = selectRefNames();
+		for(String name : refNames) {
+			String[] split = name.split("-");
+			for(MainReferee ref : mainReferees) {
+				if(ref.getSudija_sudijaId() == Integer.valueOf(split[0])) {
+					ref.setToPrint(split[1] + " " + split[2]);
+				}
+			}
+		}
+		/*for(FootballClub f : teams) {
 			System.out.println(f);
-		}	
+		}*/	
+		
+		/*List<String> teams1 = selectTeamsWhoPlayedFixture(1);
+		for(String team : teams1) {
+			System.out.println(team);
+		}*/
+		
 	}
 	
 	public void setFixtureNumber(int fixNum) {
 		fixtureNumber = fixNum;
-		System.out.println(fixtureNumber);
+		//System.out.println(fixtureNumber);
 		whichFixtureLabel.setText("Kolo broj " + fixtureNumber);
 	}
 
@@ -450,6 +489,57 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 	
 	public List<FootballClub> getTeams() {
 		return teams;
+	}
+	
+	//private ArrayList<String> refNames;
+	private List<String> selectRefNames() {
+		List<String> retVal = new ArrayList<String>();
+		Connection c = null;
+		Statement s = null;
+		ResultSet rs = null;
+
+		try {
+			c = DBUtil.getConnection();
+			s = c.createStatement();
+			rs = s.executeQuery(SQL_SELECT_REFEREE_NAMES);		
+			while (rs.next()) {
+				retVal.add(new String(rs.getString("SudijaId") + "-" + rs.getString("Ime") + "-" + rs.getString("Prezime")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs, s, c);
+		}
+
+		return retVal;
+	}
+	
+	public List<String> selectTeamsWhoPlayedFixture(int fixtureNum) {
+		List<String> retVal = new ArrayList<String>();
+		Connection c = null;
+		Statement s = null;
+		ResultSet rs = null;
+
+		try {
+			c = DBUtil.getConnection();
+			s = c.createStatement();
+			String oldValue = SQL_SELECT_TEAMS_THAT_PLAYED_FIXTURE;
+			SQL_SELECT_TEAMS_THAT_PLAYED_FIXTURE += String.valueOf(fixtureNum);
+			rs = s.executeQuery(SQL_SELECT_TEAMS_THAT_PLAYED_FIXTURE);		
+			SQL_SELECT_TEAMS_THAT_PLAYED_FIXTURE = oldValue;
+			while (rs.next()) {
+				/*retVal.add(new Game(rs.getInt("UtakmicaId"), rs.getInt("KOLO_IdKola"), 
+							rs.getInt("GLAVNI_SUDIJA_SUDIJA_SudijaId"), rs.getDate("DatumUtakmice")));*/
+				retVal.add(new String(String.valueOf(rs.getInt("IdKluba")/*+"!"+rs.getString("Naziv")*/)));
+				//System.out.println(retVal.get(retVal.size()-1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs, s, c);
+		}
+
+		return retVal;
 	}
 	
 	public List<Game> selectGamesBasedOnFixture(int fixtureNum) {
@@ -662,12 +752,12 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 		PreparedStatement ps = null;
 
 		try {
-			System.out.println("deleted1!");
+			//System.out.println("deleted1!");
 			c = DBUtil.getConnection();
 			Object values[] = { i };
 			ps = DBUtil.prepareStatement(c, SQL_DELETE_GAME, false, values);
 			retVal = ps.executeUpdate();
-			System.out.println("deleted2!");
+			//System.out.println("deleted2!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

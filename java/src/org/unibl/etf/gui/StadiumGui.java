@@ -71,9 +71,9 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 	List<Stadium> stadiums;
 	public StadiumGui() {
 		stadiums = selectAll();
-		for(Stadium s : stadiums) {
+		/*for(Stadium s : stadiums) {
 			System.out.println(s);
-		}
+		}*/
 		NUM_TEAMS = stadiums.size();
 
 		labels = new JLabel[NUM_TEAMS][4];

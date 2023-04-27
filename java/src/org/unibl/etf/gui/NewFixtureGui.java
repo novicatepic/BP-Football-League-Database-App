@@ -22,6 +22,7 @@ import org.unibl.etf.classes.Game;
 import org.unibl.etf.classes.MainReferee;
 import org.unibl.etf.classes.Stadium;
 import org.unibl.etf.classes.TeamInGame;
+import org.unibl.etf.exceptions.SameTeamsException;
 
 public class NewFixtureGui extends JFrame {
 
@@ -60,11 +61,13 @@ public class NewFixtureGui extends JFrame {
 	}
 	
 	List<Fixture> fixtures = new ArrayList<>();
-	public void populateFixtures() {
-		fixtures = fixtureShowFrame.getFixtures();
+	Fixture fixture;
+	public void populateFixture(Fixture f) {
+		fixture = f;
+		/*fixtures = fixtureShowFrame.getFixtures();
 		for(Fixture f : fixtures) {
 			chooseFixtureBox.addItem(f);
-		}
+		}*/
 	}
 	
 	List<MainReferee> mainReferees = new ArrayList<>();
@@ -76,15 +79,14 @@ public class NewFixtureGui extends JFrame {
 	}
 	
 	List<FootballClub> teams = new ArrayList<>();
-	public void populateTeams() {
-		teams = fixtureShowFrame.getTeams();
+	public void populateTeams(List<FootballClub> teams) {
+		this.teams = teams;
+		
 		for(FootballClub f : teams) {
 			chooseHomeTeamBox.addItem(f);
 			chooseAwayTeamBox.addItem(f);
 		}
 	}
-	
-	private JComboBox chooseFixtureBox;
 	private JComboBox refereeBox;
 	private JComboBox chooseAwayTeamBox;
 	private JComboBox chooseHomeTeamBox;
@@ -100,22 +102,22 @@ public class NewFixtureGui extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Date = ");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(35, 117, 172, 62);
+		lblNewLabel.setBounds(35, 52, 172, 62);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblFoundatioDate = new JLabel("Home team goals = ");
 		lblFoundatioDate.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFoundatioDate.setBounds(35, 284, 172, 62);
+		lblFoundatioDate.setBounds(35, 240, 172, 62);
 		contentPane.add(lblFoundatioDate);
 		
 		newDateField = new JTextField();
-		newDateField.setBounds(217, 128, 165, 41);
+		newDateField.setBounds(217, 63, 165, 41);
 		contentPane.add(newDateField);
 		newDateField.setColumns(10);
 		
 		homeTeamGoalsField = new JTextField();
 		homeTeamGoalsField.setColumns(10);
-		homeTeamGoalsField.setBounds(217, 295, 165, 41);
+		homeTeamGoalsField.setBounds(217, 251, 165, 41);
 		contentPane.add(homeTeamGoalsField);
 		
 		chooseHomeTeamBox = new JComboBox();
@@ -131,7 +133,7 @@ public class NewFixtureGui extends JFrame {
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					Fixture f = (Fixture)chooseFixtureBox.getSelectedItem();
+					Fixture f = fixture;
 					String[] dateFieldParse = newDateField.getText().split("-");
 					if(dateFieldParse.length != 3) {
 						throw new Exception("Problem!");
@@ -142,6 +144,9 @@ public class NewFixtureGui extends JFrame {
 					int awayTeamGoals = Integer.valueOf(awayTeamGoalsField.getText());
 					FootballClub homeTeam = (FootballClub)chooseHomeTeamBox.getSelectedItem();
 					FootballClub awayTeam = (FootballClub)chooseAwayTeamBox.getSelectedItem();
+					if(homeTeam == awayTeam) {
+						throw new SameTeamsException("Same teams cannot play against each other");
+					}
 					Game game = new Game();
 					game.setDatumUtakmice(date);
 					game.setGlavni_sudija_sudija_sudijaId(mr.getSudija_sudijaId());
@@ -188,32 +193,23 @@ public class NewFixtureGui extends JFrame {
 		chooseAwayTeamBox.setBounds(792, 200, 261, 21);
 		contentPane.add(chooseAwayTeamBox);
 		
-		chooseFixtureBox = new JComboBox();
-		chooseFixtureBox.setBounds(217, 49, 132, 34);
-		contentPane.add(chooseFixtureBox);
-		
-		JLabel lblFixtureNum = new JLabel("Fixture num = ");
-		lblFixtureNum.setHorizontalAlignment(SwingConstants.CENTER);
-		lblFixtureNum.setBounds(35, 35, 172, 62);
-		contentPane.add(lblFixtureNum);
-		
 		JLabel lblReferee = new JLabel("Referee = ");
 		lblReferee.setHorizontalAlignment(SwingConstants.CENTER);
-		lblReferee.setBounds(35, 204, 172, 62);
+		lblReferee.setBounds(35, 148, 172, 62);
 		contentPane.add(lblReferee);
 		
 		refereeBox = new JComboBox();
-		refereeBox.setBounds(217, 218, 132, 34);
+		refereeBox.setBounds(217, 162, 165, 34);
 		contentPane.add(refereeBox);
 		
 		JLabel lblAwayTeamGoals = new JLabel("Away team goals = ");
 		lblAwayTeamGoals.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAwayTeamGoals.setBounds(35, 370, 172, 62);
+		lblAwayTeamGoals.setBounds(35, 333, 172, 62);
 		contentPane.add(lblAwayTeamGoals);
 		
 		awayTeamGoalsField = new JTextField();
 		awayTeamGoalsField.setColumns(10);
-		awayTeamGoalsField.setBounds(217, 378, 165, 41);
+		awayTeamGoalsField.setBounds(217, 344, 165, 41);
 		contentPane.add(awayTeamGoalsField);
 	}
 }

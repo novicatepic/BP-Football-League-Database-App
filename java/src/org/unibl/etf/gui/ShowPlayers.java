@@ -53,6 +53,10 @@ public class ShowPlayers extends JFrame {
 	private static String SQL_SELECT_PLAYERS_IN_GAME = "SELECT * FROM igrac_na_utakmici WHERE ";
 	private static String SQL_SELECT_SECOND_PART = "KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba=";
 	private static String SQL_SELECT_THIRD_PART = " and KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId=";
+	private static String SQL_SELECT_PLAYERS_WHO_ALREADY_PLAYED = "select i.IGRAC_ZAPOSLENIK_ZapolseniId from igrac_na_utakmici i "
+			+ "left join klub_na_utakmici f on i.KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba=f.FUDBALSKI_KLUB_IdKluba "
+			+ "left join igrac ig on i.IGRAC_ZAPOSLENIK_ZapolseniId=ig.ZAPOSLENIK_ZapolseniId "
+			+ "where f.UTAKMICA_UtakmicaId=";
 	
 	private ShowPlayers frame;
 	public void setFrame(ShowPlayers frame) {
@@ -108,7 +112,21 @@ public class ShowPlayers extends JFrame {
 				AddPlayer addPlayer = new AddPlayer();
 				addPlayer.setFrame(addPlayer);
 				//List<Worker> workers = selectWorkersFromClub(homeClubId);
-				addPlayer.setPlayers(selectPlayersFromClub(homeClubId));
+				List<Player> players = selectPlayersFromClub(homeClubId);
+				List<Integer> playersInt = selectPlayersWhoAlreadyPlayed(gameId);
+				List<Player> playersToPass = new ArrayList<>();
+				for(Player p : players) {
+					boolean found = false;
+					for(Integer i : playersInt) {
+						if(p.getZAPOSLENIK_ZapolseniId() == i) {
+							found = true;
+						}
+					}
+					if(!found) {
+						playersToPass.add(p);
+					}
+				}
+				addPlayer.setPlayers(playersToPass);
 				addPlayer.setClubId(homeClubId);
 				addPlayer.setGameId(gameId);
 				addPlayer.setParentFrame(frame);
@@ -124,7 +142,21 @@ public class ShowPlayers extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				AddPlayer addPlayer = new AddPlayer();
 				addPlayer.setFrame(addPlayer);
-				addPlayer.setPlayers(selectPlayersFromClub(awayClubId));
+				List<Player> players = selectPlayersFromClub(awayClubId);
+				List<Integer> playersInt = selectPlayersWhoAlreadyPlayed(gameId);
+				List<Player> playersToPass = new ArrayList<>();
+				for(Player p : players) {
+					boolean found = false;
+					for(Integer i : playersInt) {
+						if(p.getZAPOSLENIK_ZapolseniId() == i) {
+							found = true;
+						}
+					}
+					if(!found) {
+						playersToPass.add(p);
+					}
+				}
+				addPlayer.setPlayers(playersToPass);
 				addPlayer.setClubId(awayClubId);
 				addPlayer.setGameId(gameId);
 				addPlayer.setParentFrame(frame);
@@ -247,21 +279,26 @@ public class ShowPlayers extends JFrame {
 		contentPane.add(refreshButton);
 		
 		List<Worker> workers = selectWorkersFromClub(1);
-		for(Worker w : workers) {
+		/*for(Worker w : workers) {
 			System.out.println(w);
-		}
+		}*/
 		
 		List<Player> players = selectPlayersFromClub(1);
-		for(Player w : players) {
+		/*for(Player w : players) {
 			System.out.println(w);
-		}
+		}*/
+		
+		/*List<Integer> pl = selectPlayersWhoAlreadyPlayed(7);
+		for(Integer i : pl) {
+			System.out.println("PL: " + i);
+		}*/
 		
 	}
 	
 	public void initPlayers() {
 		List<PlayerInGame> homePlayers = selectPlayersInGame(homeClubId);
 		List<PlayerInGame> awayPlayers = selectPlayersInGame(awayClubId);
-		System.out.println("HOME PLAY: " + homePlayers.size());
+		//System.out.println("HOME PLAY: " + homePlayers.size());
 		int size1 = homePlayers.size();
 		int size2 = awayPlayers.size();
 		homePlayersPanel.setLayout(new GridLayout(size1, 8));
@@ -349,6 +386,33 @@ public class ShowPlayers extends JFrame {
 	private void populateWorkers(int id) {
 		workers = selectWorkersFromClub(id);
 	}*/
+	
+	private List<Integer> selectPlayersWhoAlreadyPlayed(int gameId) {
+		List<Integer> retVal = new ArrayList<Integer>();
+		Connection c = null;
+		Statement s = null;
+		ResultSet rs = null;
+
+		try {
+			c = DBUtil.getConnection();
+			s = c.createStatement();
+			String oldValue = SQL_SELECT_PLAYERS_WHO_ALREADY_PLAYED;
+			SQL_SELECT_PLAYERS_WHO_ALREADY_PLAYED += String.valueOf(gameId);
+			rs = s.executeQuery(SQL_SELECT_PLAYERS_WHO_ALREADY_PLAYED);		
+			SQL_SELECT_PLAYERS_WHO_ALREADY_PLAYED = oldValue;
+			while (rs.next()) {
+				/*retVal.add(new Worker(rs.getInt("ZapolseniId"), rs.getString("Ime"), 
+							rs.getString("Prezime"), rs.getDate("DatumZaposlenja"), rs.getInt("FUDBALSKI_KLUB_IdKluba")));*/
+				retVal.add(rs.getInt("IGRAC_ZAPOSLENIK_ZapolseniId"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs, s, c);
+		}
+
+		return retVal;
+	}
 	
 	public List<PlayerInGame> selectPlayersInGame(int club) {
 		List<PlayerInGame> retVal = new ArrayList<PlayerInGame>();
