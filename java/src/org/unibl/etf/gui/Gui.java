@@ -5,8 +5,20 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.unibl.etf.classes.Worker;
+import org.unibl.etf.trigproc.Triggers;
+import org.unibl.etf.util.DBUtil;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -36,7 +48,32 @@ public class Gui extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
+	private void createTrigger() {
+		Connection c = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			c = DBUtil.getConnection();
+			ps = c.prepareStatement(Triggers.update_player_trigger);
+			ps.executeUpdate();
+			
+		} catch (SQLException e) {
+         System.err.println("Error creating trigger: " + e.getMessage());
+		}
+		finally {
+			DBUtil.close(rs, ps, c);
+		}
+	}
+	
 	public Gui() {
+		
+		/*try {
+			createTrigger();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}*/
+		
 		setTitle("Jelen SuperLiga");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -51,6 +51,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 	private static final String SQL_INSERT_TEAM_IN_GAME = "INSERT INTO klub_na_utakmici (FUDBALSKI_KLUB_IdKluba, UTAKMICA_UtakmicaId, BrojPostignutihGolova, IsDomacin, BrojPrimljenihGolova) VALUES (?, ?, ?, ?, ?)";
 	private static final String SQL_UPDATE_TEAM_IN_GAME = "UPDATE klub_na_utakmici SET BrojPostignutihGolova=?, BrojPrimljenihGolova=? WHERE FUDBALSKI_KLUB_IdKluba=? and UTAKMICA_UtakmicaId=?";
 	private static final String SQL_DELETE_TEAM_IN_GAME = "DELETE FROM klub_na_utakmici WHERE UTAKMICA_UtakmicaId=?";
+	private static final String SQL_DELETE_PLAYER_IN_GAME = "DELETE FROM igrac_na_utakmici WHERE KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId=?";
 	
 	private static final String SQL_SELECT_REFEREE_NAMES = "select s.SudijaId, s.Ime, s.Prezime from sudija s join glavni_sudija gs on s.SudijaId=gs.SUDIJA_SudijaId";
 	private static String SQL_SELECT_TEAMS_THAT_PLAYED_FIXTURE = "select f.IdKluba, f.Naziv from klub_na_utakmici k left join fudbalski_klub f on f.IdKluba=k.FUDBALSKI_KLUB_IdKluba"
@@ -209,7 +210,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				//System.out.println(fix.getBrojKola());
 				List<Game> gamesInFixture = selectGamesBasedOnFixture(fix.getBrojKola());
 				int length = gamesInFixture.size();
-				//System.out.println("LENDZ="+length);
+				System.out.println("LENDZ="+length);
 				homeTeamsPanel.setLayout(new GridLayout(length, 1));
 				awayTeamsPanel.setLayout(new GridLayout(length, 1));
 				resultsPanel.setLayout(new GridLayout(length, 1));
@@ -317,6 +318,8 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							int toDelete = Integer.valueOf(idLabels[temp].getText());
+							System.out.println("To delete: " + toDelete);					
+							deletePlayersInGame(toDelete);
 							deleteTeamInGame(toDelete);
 							deleteGame(toDelete);
 							try {
@@ -756,6 +759,26 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 			c = DBUtil.getConnection();
 			Object values[] = { i };
 			ps = DBUtil.prepareStatement(c, SQL_DELETE_GAME, false, values);
+			retVal = ps.executeUpdate();
+			//System.out.println("deleted2!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(ps, c);
+		}
+		return retVal;
+	}
+	
+	private int deletePlayersInGame(int i) {
+		int retVal = 0;
+		Connection c = null;
+		PreparedStatement ps = null;
+
+		try {
+			//System.out.println("deleted1!");
+			c = DBUtil.getConnection();
+			Object values[] = { i };
+			ps = DBUtil.prepareStatement(c, SQL_DELETE_PLAYER_IN_GAME, false, values);
 			retVal = ps.executeUpdate();
 			//System.out.println("deleted2!");
 		} catch (SQLException e) {
