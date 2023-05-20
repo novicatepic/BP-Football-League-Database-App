@@ -28,26 +28,12 @@ public class ChangeTeamWindow extends JFrame {
 	private JTextField dateField;
 	private JTextField trophiesWonField;
 	private JButton saveButton;
-	/**
-	 * Launch the application.
-	 */
+
 	private int id;
 	public void setTeamId(int id) {
 		this.id = id;
 	}
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChangeTeamWindow frame = new ChangeTeamWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	private List<Stadium> stadiums;
 	public void passStadiums(List<Stadium> stadiums) {
 		this.stadiums = stadiums;
@@ -182,6 +168,9 @@ public class ChangeTeamWindow extends JFrame {
 							try {
 								Thread.sleep(1000);
 							} catch(InterruptedException ex) {
+								ErrorBox errorBox = new ErrorBox();
+								errorBox.setVisible(true);
+								errorBox.setText(ex.getMessage());
 								ex.printStackTrace();
 							}
 							frame.dispose();
@@ -192,6 +181,9 @@ public class ChangeTeamWindow extends JFrame {
 						}
 					}
 				} catch(Exception e12) {
+					ErrorBox errorBox = new ErrorBox();
+					errorBox.setVisible(true);
+					errorBox.setText(e12.getMessage());
 					e12.printStackTrace();
 				}
 				

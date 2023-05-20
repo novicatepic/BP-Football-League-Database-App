@@ -22,22 +22,6 @@ public class NewStadiumWindow extends JFrame {
 	private JTextField nameField;
 	private JTextField dateField;
 	private JTextField trophiesWonField;
-	/**
-	 * Launch the application.
-	 */
-	//private static NewStadiumWindow stadiumFrame;
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					NewStadiumWindow stadiumFrame = new NewStadiumWindow();
-					stadiumFrame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	private StadiumGui frame;
 	public void setStadiumFrame(StadiumGui frame) {
@@ -106,6 +90,9 @@ public class NewStadiumWindow extends JFrame {
 				try {
 					Thread.sleep(1000);
 				} catch(InterruptedException ex) {
+					ErrorBox errorBox = new ErrorBox();
+					errorBox.setVisible(true);
+					errorBox.setText(ex.getMessage());
 					ex.printStackTrace();
 				}
 				stadiumFrame.dispose();

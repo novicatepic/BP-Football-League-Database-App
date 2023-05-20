@@ -24,21 +24,6 @@ public class ChangeStadiumWindow extends JFrame {
 	private JTextField nameField;
 	private JTextField capacityField;
 	private JTextField townField;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChangeStadiumWindow frame = new ChangeStadiumWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	private StadiumGui frame;
 	public void setStadiumFrame(StadiumGui frame) {
@@ -138,6 +123,9 @@ public class ChangeStadiumWindow extends JFrame {
 						try {
 							Thread.sleep(1000);
 						} catch(InterruptedException ex) {
+							ErrorBox errorBox = new ErrorBox();
+							errorBox.setVisible(true);
+							errorBox.setText(ex.getMessage());
 							ex.printStackTrace();
 						}
 						changeFrame.dispose();

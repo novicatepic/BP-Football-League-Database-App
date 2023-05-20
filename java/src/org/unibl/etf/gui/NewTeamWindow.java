@@ -51,26 +51,7 @@ public class NewTeamWindow extends JFrame {
 	public void setTeamFrame(NewTeamWindow frame) {
 		teamFrame = frame;
 	}
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					NewTeamWindow frame = new NewTeamWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public NewTeamWindow() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 723, 503);
@@ -143,6 +124,9 @@ public class NewTeamWindow extends JFrame {
 					try {
 						Thread.sleep(1000);
 					} catch(InterruptedException ex) {
+						ErrorBox errorBox = new ErrorBox();
+						errorBox.setVisible(true);
+						errorBox.setText(ex.getMessage());
 						ex.printStackTrace();
 					}
 					frame.dispose();

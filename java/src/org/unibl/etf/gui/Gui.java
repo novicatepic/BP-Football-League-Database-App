@@ -39,6 +39,9 @@ public class Gui extends JFrame {
 					Gui frame = new Gui();
 					frame.setVisible(true);
 				} catch (Exception e) {
+					ErrorBox errorBox = new ErrorBox();
+					errorBox.setVisible(true);
+					errorBox.setText(e.getMessage());
 					e.printStackTrace();
 				}
 			}

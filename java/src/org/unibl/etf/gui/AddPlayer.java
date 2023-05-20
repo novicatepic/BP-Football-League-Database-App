@@ -42,23 +42,6 @@ public class AddPlayer extends JFrame implements PlayerInGameDAO {
 
 	
 	private JPanel contentPane;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args)  {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AddPlayer frame = new AddPlayer();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
 	private JComboBox choosePlayerBox;
 	private JTextField numGoalsField;
 	private JTextField numAssistsField;
@@ -184,6 +167,9 @@ public class AddPlayer extends JFrame implements PlayerInGameDAO {
 					Thread.sleep(500);
 				} catch(Exception e1) {
 					e1.printStackTrace();
+					ErrorBox errorBox = new ErrorBox();
+					errorBox.setVisible(true);
+					errorBox.setText(e1.getMessage());
 				}
 				/*ShowPlayers sp = new ShowPlayers();
 				sp.setFrame(sp);
@@ -213,6 +199,9 @@ public class AddPlayer extends JFrame implements PlayerInGameDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 		} finally {
 			DBUtil.close(rs, s, c);
 		}
@@ -240,6 +229,9 @@ public class AddPlayer extends JFrame implements PlayerInGameDAO {
 					i.setStadionId(rs.getInt(1));
 			}*/
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, ps, c);

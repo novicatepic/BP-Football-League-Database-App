@@ -30,25 +30,6 @@ public class NewFixtureGui extends JFrame {
 	private JTextField newDateField;
 	private JTextField homeTeamGoalsField;
 	private JTextField awayTeamGoalsField;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					NewFixtureGui frame = new NewFixtureGui();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	
 	private FixtureShowGui fixtureShowFrame;
 	public void setFixtureShowFrame(FixtureShowGui frame) {
@@ -169,6 +150,9 @@ public class NewFixtureGui extends JFrame {
 					try {
 						Thread.sleep(1000);
 					} catch(InterruptedException ex) {
+						ErrorBox errorBox = new ErrorBox();
+						errorBox.setVisible(true);
+						errorBox.setText(ex.getMessage());
 						ex.printStackTrace();
 					}
 					fixtureShowFrame.dispose();
@@ -177,6 +161,9 @@ public class NewFixtureGui extends JFrame {
 					sg.setFrame(sg);
 					sg.setVisible(true);
 				} catch(Exception e1) {
+					ErrorBox errorBox = new ErrorBox();
+					errorBox.setVisible(true);
+					errorBox.setText(e1.getMessage());
 					e1.printStackTrace();
 				}	
 			}

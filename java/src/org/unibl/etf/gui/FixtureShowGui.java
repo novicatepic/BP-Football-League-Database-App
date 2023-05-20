@@ -73,22 +73,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 	private JButton newFixtureButton;
 	private JButton submitFixtureButton;
 	private JPanel deleteFixturePanel;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FixtureShowGui frame = new FixtureShowGui();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
+
 	private FixtureShowGui frame;
 	public void setFrame(FixtureShowGui frame) {
 		this.frame = frame;
@@ -325,6 +310,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 							try {
 								Thread.sleep(1000);
 							} catch(InterruptedException ex) {
+								ErrorBox errorBox = new ErrorBox();
+								errorBox.setVisible(true);
+								errorBox.setText(ex.getMessage());
 								ex.printStackTrace();
 							}
 							frame.dispose();
@@ -509,6 +497,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				retVal.add(new String(rs.getString("SudijaId") + "-" + rs.getString("Ime") + "-" + rs.getString("Prezime")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -537,6 +528,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				//System.out.println(retVal.get(retVal.size()-1));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -563,6 +557,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 							rs.getInt("GLAVNI_SUDIJA_SUDIJA_SudijaId"), rs.getDate("DatumUtakmice")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -589,6 +586,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 							rs.getInt("BrojPostignutihGolova"), rs.getBoolean("IsDomacin"), rs.getInt("BrojPrimljenihGolova")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -615,6 +615,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 							rs.getDate("DatumOsnivanja"), rs.getInt("BrojOsvojenihTrofeja"), rs.getInt("STADION_StadioId")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -639,6 +642,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				retVal.add(new Fixture(rs.getInt("BrojKola")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -663,6 +669,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				retVal.add(new MainReferee(rs.getInt("SUDIJA_SudijaId")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -688,6 +697,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 						rs.getInt("GodineRada"), rs.getInt("BrojUtakmica")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -713,6 +725,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 						rs.getDate("DatumUtakmice")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -740,6 +755,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 					
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, ps, c);
@@ -762,6 +780,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 			retVal = ps.executeUpdate();
 			//System.out.println("deleted2!");
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(ps, c);
@@ -782,6 +803,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 			retVal = ps.executeUpdate();
 			//System.out.println("deleted2!");
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(ps, c);
@@ -808,6 +832,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 						rs.getInt("BrojPrimljenihGolova")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -835,6 +862,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 					i.setUtakmicaId(rs.getInt(1));
 			}*/
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, ps, c);
@@ -855,6 +885,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 			ps = DBUtil.prepareStatement(c, SQL_UPDATE_TEAM_IN_GAME, false, values);
 			retVal = ps.executeUpdate();
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(ps, c);
@@ -874,6 +907,9 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 			ps = DBUtil.prepareStatement(c, SQL_DELETE_TEAM_IN_GAME, false, values);
 			retVal = ps.executeUpdate();
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(ps, c);

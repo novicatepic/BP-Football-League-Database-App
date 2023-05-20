@@ -31,21 +31,6 @@ public class ShowPlayers extends JFrame {
 	private JPanel contentPane;
 	private JLabel[] homePlayerLabels;
 	private JLabel[] awayPlayerLabels;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ShowPlayers frame = new ShowPlayers();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	private static String SQL_SELECT_PLAYERS = "SELECT * FROM igrac WHERE ZAPOSLENIK_ZapolseniId=";
 	private static String SQL_SELECT_WORKERS = "SELECT * FROM zaposlenik WHERE FUDBALSKI_KLUB_IdKluba=";
@@ -406,6 +391,9 @@ public class ShowPlayers extends JFrame {
 				retVal.add(rs.getInt("IGRAC_ZAPOSLENIK_ZapolseniId"));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -438,6 +426,9 @@ public class ShowPlayers extends JFrame {
 							rs.getBoolean("PoceoUtakmicu"), rs.getInt("OdigraoMinuta")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -464,6 +455,9 @@ public class ShowPlayers extends JFrame {
 							rs.getString("Prezime"), rs.getDate("DatumZaposlenja"), rs.getInt("FUDBALSKI_KLUB_IdKluba")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -490,6 +484,9 @@ public class ShowPlayers extends JFrame {
 							rs.getString("Prezime"), rs.getDate("DatumZaposlenja"), rs.getInt("FUDBALSKI_KLUB_IdKluba")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -521,6 +518,9 @@ public class ShowPlayers extends JFrame {
 				}
 			}	
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);

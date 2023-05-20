@@ -20,22 +20,6 @@ public class ChangeFixtureGui extends JFrame {
 	private JTextField homeTeamGoals;
 	private JTextField awayTeamGoals;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChangeFixtureGui frame = new ChangeFixtureGui();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	private ChangeFixtureGui frame;
 	public void setFrame(ChangeFixtureGui frame) {
 		this.frame = frame;
@@ -125,6 +109,9 @@ public class ChangeFixtureGui extends JFrame {
 					try {
 						Thread.sleep(1000);
 					} catch(InterruptedException ex) {
+						ErrorBox errorBox = new ErrorBox();
+						errorBox.setVisible(true);
+						errorBox.setText(ex.getMessage());
 						ex.printStackTrace();
 					}
 					showGuiFrame.dispose();

@@ -41,21 +41,6 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 	private static StadiumGui frame;
 	private JLabel[][] labels;/* = new JLabel[NUM_TEAMS][4];*/
 	private JButton[][] buttons;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					StadiumGui frame = new StadiumGui();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	public void setFrame(StadiumGui frame2) {
 		frame = frame2;
@@ -197,6 +182,9 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 										try {
 											Thread.sleep(1000);
 										} catch(InterruptedException ex) {
+											ErrorBox errorBox = new ErrorBox();
+											errorBox.setVisible(true);
+											errorBox.setText(ex.getMessage());
 											ex.printStackTrace();
 										}
 										frame.dispose();
@@ -281,6 +269,9 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 						rs.getString("Grad")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -308,6 +299,9 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 					i.setStadionId(rs.getInt(1));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, ps, c);
@@ -328,6 +322,9 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 			ps = DBUtil.prepareStatement(c, SQL_UPDATE, false, values);
 			retVal = ps.executeUpdate();
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(ps, c);
@@ -347,6 +344,9 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 			ps = DBUtil.prepareStatement(c, SQL_DELETE, false, values);
 			retVal = ps.executeUpdate();
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(ps, c);

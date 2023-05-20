@@ -39,21 +39,6 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 	private JLabel[][] labels;/* labels = new JLabel[NUM_TEAMS][5];*/
 	private JButton[][] buttons;
 	private static TeamGui frame;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frame = new TeamGui();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	public void setFrame(TeamGui frame2) {
 		frame= frame2;
@@ -212,6 +197,9 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 								try {
 									Thread.sleep(1000);
 								} catch(InterruptedException ex) {
+									ErrorBox errorBox = new ErrorBox();
+									errorBox.setVisible(true);
+									errorBox.setText(ex.getMessage());
 									ex.printStackTrace();
 								}
 								frame.dispose();
@@ -274,6 +262,9 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 						rs.getInt("BrojOsvojenihTrofeja"), rs.getInt("STADION_StadioId")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
@@ -300,6 +291,9 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 					i.setStadionId(rs.getInt(1));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, ps, c);
@@ -320,6 +314,9 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 			ps = DBUtil.prepareStatement(c, SQL_UPDATE, false, values);
 			retVal = ps.executeUpdate();
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(ps, c);
@@ -339,6 +336,9 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 			ps = DBUtil.prepareStatement(c, SQL_DELETE, false, values);
 			retVal = ps.executeUpdate();
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(ps, c);
@@ -362,6 +362,9 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 						rs.getString("Grad")));
 			}
 		} catch (SQLException e) {
+			ErrorBox errorBox = new ErrorBox();
+			errorBox.setVisible(true);
+			errorBox.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			DBUtil.close(rs, s, c);
