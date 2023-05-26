@@ -18,6 +18,11 @@ import org.unibl.etf.dao.StadiumDAO;
 import org.unibl.etf.util.DBUtil;
 
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -280,6 +285,30 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 		return retVal;
 	}
 
+	
+	public void loadData() {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(new File("./resources/stadioni2.txt")));
+			String read = "";
+			ArrayList<Stadium> stadiums = new ArrayList<>();
+			while((read=reader.readLine()) != null) {
+				String[] split = read.split("-");
+				Stadium s = new Stadium();
+				s.setNaziv(split[0]);
+				s.setKapacitet(Integer.parseInt(split[1]));
+				s.setGrad(split[2]);
+				stadiums.add(s);
+			}
+			for(Stadium st : stadiums) {
+				insert(st);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
 	@Override
 	public int insert(Stadium i) {
 		

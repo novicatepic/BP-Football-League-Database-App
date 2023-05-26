@@ -81,7 +81,7 @@ public class ChangeFixtureGui extends JFrame {
 		lblNewLabel_1.setBounds(35, 10, 642, 29);
 		contentPane.add(lblNewLabel_1);
 		
-		JLabel lblNumberOfTrophies_1 = new JLabel("Home team goals = ");
+		JLabel lblNumberOfTrophies_1 = new JLabel("Away team goals = ");
 		lblNumberOfTrophies_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNumberOfTrophies_1.setBounds(36, 177, 172, 62);
 		contentPane.add(lblNumberOfTrophies_1);

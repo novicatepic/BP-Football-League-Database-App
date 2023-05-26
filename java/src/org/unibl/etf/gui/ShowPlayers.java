@@ -39,9 +39,9 @@ public class ShowPlayers extends JFrame {
 	private static String SQL_SELECT_SECOND_PART = "KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba=";
 	private static String SQL_SELECT_THIRD_PART = " and KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId=";
 	private static String SQL_SELECT_PLAYERS_WHO_ALREADY_PLAYED = "select i.IGRAC_ZAPOSLENIK_ZapolseniId from igrac_na_utakmici i "
-			+ "left join klub_na_utakmici f on i.KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba=f.FUDBALSKI_KLUB_IdKluba "
-			+ "left join igrac ig on i.IGRAC_ZAPOSLENIK_ZapolseniId=ig.ZAPOSLENIK_ZapolseniId "
-			+ "where f.UTAKMICA_UtakmicaId=";
+			+ "inner join klub_na_utakmici f on i.KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba=f.FUDBALSKI_KLUB_IdKluba "
+			+ "inner join igrac ig on i.IGRAC_ZAPOSLENIK_ZapolseniId=ig.ZAPOSLENIK_ZapolseniId "
+			+ "where i.KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId=";
 	
 	private ShowPlayers frame;
 	public void setFrame(ShowPlayers frame) {
@@ -100,6 +100,8 @@ public class ShowPlayers extends JFrame {
 				List<Player> players = selectPlayersFromClub(homeClubId);
 				List<Integer> playersInt = selectPlayersWhoAlreadyPlayed(gameId);
 				List<Player> playersToPass = new ArrayList<>();
+				System.out.println("gid: " + gameId);
+				System.out.println(playersInt);
 				for(Player p : players) {
 					boolean found = false;
 					for(Integer i : playersInt) {
@@ -128,7 +130,9 @@ public class ShowPlayers extends JFrame {
 				AddPlayer addPlayer = new AddPlayer();
 				addPlayer.setFrame(addPlayer);
 				List<Player> players = selectPlayersFromClub(awayClubId);
+				System.out.println("gid: " + gameId);
 				List<Integer> playersInt = selectPlayersWhoAlreadyPlayed(gameId);
+				System.out.println(playersInt);
 				List<Player> playersToPass = new ArrayList<>();
 				for(Player p : players) {
 					boolean found = false;
@@ -263,21 +267,8 @@ public class ShowPlayers extends JFrame {
 		refreshButton.setBounds(1047, 10, 118, 44);
 		contentPane.add(refreshButton);
 		
-		List<Worker> workers = selectWorkersFromClub(1);
-		/*for(Worker w : workers) {
-			System.out.println(w);
-		}*/
-		
+		List<Worker> workers = selectWorkersFromClub(1);	
 		List<Player> players = selectPlayersFromClub(1);
-		/*for(Player w : players) {
-			System.out.println(w);
-		}*/
-		
-		/*List<Integer> pl = selectPlayersWhoAlreadyPlayed(7);
-		for(Integer i : pl) {
-			System.out.println("PL: " + i);
-		}*/
-		
 	}
 	
 	public void initPlayers() {
@@ -420,6 +411,7 @@ public class ShowPlayers extends JFrame {
 			SQL_SELECT_SECOND_PART = oldValue;
 			SQL_SELECT_THIRD_PART = oldValue2;
 			while (rs.next()) {
+				System.out.println(rs.getInt("IGRAC_ZAPOSLENIK_ZapolseniId"));
 				retVal.add(new PlayerInGame(rs.getInt("IGRAC_ZAPOSLENIK_ZapolseniId"), rs.getInt("BrojGolovaNaUtakmici"), 
 							rs.getInt("BrojAsistencijaNaUtakmici"), rs.getBoolean("DobioZuti"), rs.getBoolean("DobioCrveni"), 
 							rs.getInt("KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba"), rs.getInt("KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId"),

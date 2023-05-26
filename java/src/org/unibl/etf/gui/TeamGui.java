@@ -13,7 +13,13 @@ import org.unibl.etf.util.DBUtil;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -271,6 +277,30 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 		}
 
 		return retVal;
+	}
+	
+	public void loadData() {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(new File("./resources/klubovi2.txt")));
+			String read = "";
+			ArrayList<FootballClub> teams = new ArrayList<>();
+			while((read=reader.readLine()) != null) {
+				String[] split = read.split("#");
+				FootballClub s = new FootballClub();
+				s.setNaziv(split[0]);
+				s.setDatumOsnivanja(Date.valueOf(split[1]));
+				s.setBrojOsvojenihTrofeja(Integer.valueOf(split[2]));
+				s.setStadionId(Integer.valueOf(split[3]));
+				teams.add(s);
+			}
+			for(FootballClub t : teams) {
+				insert(t);
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	@Override

@@ -395,20 +395,7 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 		}
 		
 		readReferees();
-		/*for(Referee ref : referees) {
-			System.out.println(ref);
-		}*/
-		
 		readMainReferees();
-		/*for(MainReferee ref : mainReferees) {
-			System.out.println(ref);
-		}*/
-		/*for(MainReferee mr : mainReferees) {
-			for(Referee r : referees) {
-				if(r.getSudijaId() ==)
-			}
-		}*/
-		
 		readClubs();
 		
 		List<String> refNames = selectRefNames();
@@ -420,20 +407,10 @@ public class FixtureShowGui extends JFrame implements FixtureDAO, RefereeDAO ,Ma
 				}
 			}
 		}
-		/*for(FootballClub f : teams) {
-			System.out.println(f);
-		}*/	
-		
-		/*List<String> teams1 = selectTeamsWhoPlayedFixture(1);
-		for(String team : teams1) {
-			System.out.println(team);
-		}*/
-		
 	}
 	
 	public void setFixtureNumber(int fixNum) {
 		fixtureNumber = fixNum;
-		//System.out.println(fixtureNumber);
 		whichFixtureLabel.setText("Kolo broj " + fixtureNumber);
 	}
 

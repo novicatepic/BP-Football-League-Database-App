@@ -12,6 +12,11 @@ import org.unibl.etf.util.DBUtil;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -68,15 +73,9 @@ public class Gui extends JFrame {
 			DBUtil.close(rs, ps, c);
 		}
 	}
+
 	
 	public Gui() {
-		
-		/*try {
-			createTrigger();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}*/
-		
 		setTitle("Jelen SuperLiga");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
