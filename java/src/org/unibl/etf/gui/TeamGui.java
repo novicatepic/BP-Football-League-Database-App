@@ -182,7 +182,7 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 							ctw.passStadiums(stadiums);
 							ctw.addData();
 							ctw.setTeamChangeFrame(ctw);
-							ctw.clickButton();
+							//ctw.clickButton();
 							ctw.setVisible(true);
 						}
 					});

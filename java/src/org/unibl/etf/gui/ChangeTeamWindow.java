@@ -50,9 +50,7 @@ public class ChangeTeamWindow extends JFrame {
 	}
 	
 	public void addData() {
-		for(Stadium s : stadiums) {
-			chooseStadiumBox.addItem(s);
-		}
+		
 		List<FootballClub> data = frame.getData();
 		FootballClub s = null;
 		for(FootballClub stad : data) {
@@ -60,6 +58,14 @@ public class ChangeTeamWindow extends JFrame {
 				s = stad;
 			}
 		}
+		for(Stadium stadium : stadiums) {
+			chooseStadiumBox.addItem(stadium);
+			if(stadium.getStadionId() == s.getStadionId()) {
+				chooseStadiumBox.setSelectedItem(stadium);
+			}
+		}
+		//System.out.println("STADIO FROM FUNC: " + s);
+		//chooseStadiumBox.setSelectedItem(s);
 		nameField.setText(s.getNaziv());
 		dateField.setText(s.getDatumOsnivanja().toString());
 		trophiesWonField.setText(String.valueOf(s.getBrojOsvojenihTrofeja()));
@@ -133,13 +139,17 @@ public class ChangeTeamWindow extends JFrame {
 							s = stad;
 						}
 					}
-					Stadium s2 = null;
+					//System.out.println("S = " + s);
+					//System.out.println(chooseStadiumBox.getSelectedItem());
+					Stadium s2 = (Stadium)chooseStadiumBox.getSelectedItem();
+					/*Stadium s2 = null;
 					for(Stadium s1 : stadiums) {
 						if(s1.getStadionId() == s.getStadionId()) {
 							chooseStadiumBox.setSelectedItem(s1);
 							s2 = s1;
 						}
-					}
+					}*/
+					//System.out.println(s2);
 					if(s != null) {
 						boolean anything = false;
 						if(!s.getNaziv().equals(nameField.getText())) {
@@ -160,6 +170,7 @@ public class ChangeTeamWindow extends JFrame {
 							anything = true;
 						}
 						if(s2 != null && s2.getStadionId() != s.getStadionId()) {
+							System.out.println("IN");
 							s.setStadionId(s2.getStadionId());
 							anything = true;
 						}
