@@ -122,6 +122,7 @@ begin
 end$$
 delimiter ;
 
+/*trigger koji azurira statistiku  tima nakon azuriranja kluba na utakmici*/
 delimiter $$
 create trigger change_team_stats after update on klub_na_utakmici
 for each row
@@ -130,6 +131,17 @@ begin
     set sz.BrojPostignutihGolova=sz.BrojPostignutihGolova-old.BrojPostignutihGolova+new.BrojPostignutihGolova,
     sz.BrojPrimljenihGolova=sz.BrojPrimljenihGolova-old.BrojPrimljenihGolova+new.BrojPrimljenihGolova
     where sz.FUDBALSKI_KLUB_IdKluba=old.FUDBALSKI_KLUB_IdKluba;
+end$$
+delimiter ;
+
+/*trigger koji provjerava kapacitet stadiona prije umetanja novog stadiona*/
+delimiter $$ 
+create trigger check_stadium_capacity before insert on stadion 
+for each row
+begin
+	if new.Kapacitet<0 then
+		signal sqlstate '45000' set message_text='Nevalidan kapacitet stadiona!';
+    end if;
 end$$
 delimiter ;
 

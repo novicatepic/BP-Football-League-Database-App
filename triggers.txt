@@ -1,0 +1,356 @@
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `check_stats_before_insert` BEFORE INSERT ON `igrac_na_utakmici` FOR EACH ROW begin
+	declare vBrojPostignutihGolova int default 0;
+    declare vBrojPrimljenihGolova int default 0;
+    declare vBrojPostignutihGolovaDoSad int default 0;
+    declare vBrojAsistencijaDoSad int default 0;
+	if new.OdigraoMinuta<0 or new.OdigraoMinuta>90 then
+		signal sqlstate '45000' set message_text='Nevalidan unos minuta!';
+    end if;
+    
+    select knu.BrojPostignutihGolova into vBrojPostignutihGolova
+    from klub_na_utakmici knu
+    where new.KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba=knu.FUDBALSKI_KLUB_IdKluba 
+    and new.KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId=knu.UTAKMICA_UtakmicaId;
+
+    select knu.BrojPrimljenihGolova into vBrojPrimljenihGolova
+    from klub_na_utakmici knu
+    where new.KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba=knu.FUDBALSKI_KLUB_IdKluba 
+    and new.KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId=knu.UTAKMICA_UtakmicaId;
+	
+    select ifnull(sum(inu.BrojGolovaNaUtakmici), 0) into vBrojPostignutihGolovaDoSad
+    from igrac_na_utakmici inu 
+    where inu.KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId=new.KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId
+    and new.KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba=inu.KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba;
+    
+    select ifnull(sum(inu.BrojAsistencijaNaUtakmici), 0) into vBrojAsistencijaDoSad
+    from igrac_na_utakmici inu 
+    where inu.KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId=new.KLUB_NA_UTAKMICI_UTAKMICA_UtakmicaId
+    and new.KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba=inu.KLUB_NA_UTAKMICI_FUDBALSKI_KLUB_IdKluba;
+    
+    if vBrojPostignutihGolovaDoSad+vBrojAsistencijaDoSad+new.BrojGolovaNaUtakmici+new.BrojAsistencijaNaUtakmici>vBrojPostignutihGolova then
+		signal sqlstate '45000' set message_text='Previse golova!';
+    end if;
+    /*if vBrojPostignutihGolovaDoSad+vBrojAsistencijaDoSad+new.BrojGolovaNaUtakmici+new.BrojAsistencijaNaUtakmici>vBrojPostignutihGolova then
+		signal sqlstate '45000' set message_text='Previse golova!';
+    end if;*/
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `update_player_stats` AFTER INSERT ON `igrac_na_utakmici` FOR EACH ROW begin
+	update igrac i
+    set i.BrojGolova=i.BrojGolova+new.BrojGolovaNaUtakmici,
+    i.BrojAsistencija=i.BrojAsistencija+new.BrojAsistencijaNaUtakmici,
+    i.BrojZutihKartona=i.BrojZutihKartona+new.DobioZuti,
+    i.BrojCrvenihKartona=i.BrojCrvenihKartona+new.DobioCrveni
+    where i.ZAPOSLENIK_ZapolseniId=new.IGRAC_ZAPOSLENIK_ZapolseniId;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `delete_player_stats` AFTER DELETE ON `igrac_na_utakmici` FOR EACH ROW begin
+	update igrac i
+    set i.BrojGolova=i.BrojGolova-old.BrojGolovaNaUtakmici,
+    i.BrojAsistencija=i.BrojAsistencija-old.BrojAsistencijaNaUtakmici,
+    i.BrojZutihKartona=i.BrojZutihKartona-old.DobioZuti,
+    i.BrojCrvenihKartona=i.BrojCrvenihKartona-old.DobioCrveni
+    where i.ZAPOSLENIK_ZapolseniId=old.IGRAC_ZAPOSLENIK_ZapolseniId;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `klub_na_utakmici`
+--
+
+DROP TABLE IF EXISTS `klub_na_utakmici`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `klub_na_utakmici` (
+  `FUDBALSKI_KLUB_IdKluba` int NOT NULL,
+  `UTAKMICA_UtakmicaId` int NOT NULL,
+  `BrojPostignutihGolova` int NOT NULL,
+  `IsDomacin` tinyint NOT NULL,
+  `BrojPrimljenihGolova` int NOT NULL,
+  PRIMARY KEY (`FUDBALSKI_KLUB_IdKluba`,`UTAKMICA_UtakmicaId`),
+  KEY `fk_FUDBALSKI_KLUB_has_UTAKMICA_UTAKMICA1_idx` (`UTAKMICA_UtakmicaId`),
+  KEY `fk_FUDBALSKI_KLUB_has_UTAKMICA_FUDBALSKI_KLUB1_idx` (`FUDBALSKI_KLUB_IdKluba`),
+  CONSTRAINT `fk_FUDBALSKI_KLUB_has_UTAKMICA_FUDBALSKI_KLUB1` FOREIGN KEY (`FUDBALSKI_KLUB_IdKluba`) REFERENCES `fudbalski_klub` (`IdKluba`),
+  CONSTRAINT `fk_FUDBALSKI_KLUB_has_UTAKMICA_UTAKMICA1` FOREIGN KEY (`UTAKMICA_UtakmicaId`) REFERENCES `utakmica` (`UtakmicaId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `klub_na_utakmici`
+--
+
+LOCK TABLES `klub_na_utakmici` WRITE;
+/*!40000 ALTER TABLE `klub_na_utakmici` DISABLE KEYS */;
+INSERT INTO `klub_na_utakmici` VALUES (1,52,1,1,2),(1,69,2,1,1),(1,81,3,1,3),(2,52,2,0,1),(2,70,2,1,3),(5,55,1,1,1),(5,71,2,1,2),(6,55,1,0,1),(6,76,1,1,1),(7,56,1,1,1),(7,74,1,0,1),(8,56,1,0,1),(8,77,2,1,1),(9,57,2,1,0),(9,69,1,0,2),(10,57,0,0,2),(10,70,3,0,2),(10,81,3,0,3),(11,58,1,1,2),(11,78,0,1,0),(12,59,2,1,2),(12,74,1,1,1),(13,60,3,1,1),(13,71,2,0,2),(14,60,1,0,3),(14,75,1,0,1),(15,59,2,0,2),(15,78,0,0,0),(16,58,2,0,1),(16,73,1,0,1),(17,61,1,1,2),(17,76,1,0,1),(18,61,2,0,1),(18,75,1,1,1),(19,62,1,1,1),(19,72,1,1,1),(20,62,1,0,1),(20,73,1,1,1),(21,72,1,0,1),(21,85,2,0,1),(22,77,1,0,2),(22,85,1,1,2);
+/*!40000 ALTER TABLE `klub_na_utakmici` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `did_team_play` BEFORE INSERT ON `klub_na_utakmici` FOR EACH ROW begin
+	call find_fixture_based_on_game(new.UTAKMICA_UtakmicaId, @fixture);
+    call check_club_in_game(@fixture, new.FUDBALSKI_KLUB_IdKluba, @pstatus);
+    if @pstatus=1 then
+		signal sqlstate '45000' set message_text='Vec postoji unos!';
+    end if;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `update_team_stats` AFTER INSERT ON `klub_na_utakmici` FOR EACH ROW begin
+	declare points int default 0;
+    if new.BrojPostignutihGolova>new.BrojPrimljenihGolova then
+		set points=3;
+    elseif new.BrojPostignutihGolova=new.BrojPrimljenihGolova then
+		set points=1;
+    end if;
+	update statistika_u_sezoni sz
+    set sz.BrojPostignutihGolova=sz.BrojPostignutihGolova+new.BrojPostignutihGolova,
+    sz.BrojPrimljenihGolova=sz.BrojPrimljenihGolova+new.BrojPrimljenihGolova,
+    sz.BrojPobjeda=sz.BrojPobjeda+(new.BrojPostignutihGolova>new.BrojPrimljenihGolova),
+    sz.BrojNerijesenih=sz.BrojNerijesenih+(new.BrojPostignutihGolova=new.BrojPrimljenihGolova),
+    sz.BrojPoraza=sz.BrojPoraza+(new.BrojPostignutihGolova<new.BrojPrimljenihGolova),
+    sz.BrojOdigranihUtakmica=sz.BrojOdigranihUtakmica+1,
+    sz.BrojBodova=sz.BrojBodova+points
+    where sz.FUDBALSKI_KLUB_IdKluba=new.FUDBALSKI_KLUB_IdKluba;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `change_team_stats` AFTER UPDATE ON `klub_na_utakmici` FOR EACH ROW begin
+	update statistika_u_sezoni sz
+    set sz.BrojPostignutihGolova=sz.BrojPostignutihGolova-old.BrojPostignutihGolova+new.BrojPostignutihGolova,
+    sz.BrojPrimljenihGolova=sz.BrojPrimljenihGolova-old.BrojPrimljenihGolova+new.BrojPrimljenihGolova
+    where sz.FUDBALSKI_KLUB_IdKluba=old.FUDBALSKI_KLUB_IdKluba;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `delete_team_stats` AFTER DELETE ON `klub_na_utakmici` FOR EACH ROW begin
+	declare points int default -3;
+    if old.BrojPostignutihGolova>old.BrojPrimljenihGolova then
+		set points=3;
+    elseif old.BrojPostignutihGolova=old.BrojPrimljenihGolova then
+		set points=1;
+    end if;
+	update statistika_u_sezoni sz
+    set sz.BrojPostignutihGolova=sz.BrojPostignutihGolova-old.BrojPostignutihGolova,
+    sz.BrojPrimljenihGolova=sz.BrojPrimljenihGolova-old.BrojPrimljenihGolova,
+    sz.BrojPobjeda=sz.BrojPobjeda-(old.BrojPostignutihGolova>old.BrojPrimljenihGolova),
+    sz.BrojNerijesenih=sz.BrojNerijesenih-(old.BrojPostignutihGolova=old.BrojPrimljenihGolova),
+    sz.BrojPoraza=sz.BrojPoraza-(old.BrojPostignutihGolova<old.BrojPrimljenihGolova),
+    sz.BrojOdigranihUtakmica=sz.BrojOdigranihUtakmica-1,
+    sz.BrojBodova=sz.BrojBodova-points
+    where sz.FUDBALSKI_KLUB_IdKluba=old.FUDBALSKI_KLUB_IdKluba;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `kolo`
+--
+
+DROP TABLE IF EXISTS `kolo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `kolo` (
+  `BrojKola` int NOT NULL,
+  PRIMARY KEY (`BrojKola`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `kolo`
+--
+
+LOCK TABLES `kolo` WRITE;
+/*!40000 ALTER TABLE `kolo` DISABLE KEYS */;
+INSERT INTO `kolo` VALUES (1),(2),(3),(4),(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),(15),(16),(17),(18),(19),(20),(21),(22),(23),(24),(25),(26),(27),(28),(29),(30),(31),(32),(33),(34),(35),(36),(37),(38);
+/*!40000 ALTER TABLE `kolo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `linijski_sudija`
+--
+
+DROP TABLE IF EXISTS `linijski_sudija`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `linijski_sudija` (
+  `SUDIJA_SudijaId` int NOT NULL,
+  PRIMARY KEY (`SUDIJA_SudijaId`),
+  CONSTRAINT `fk_LINIJSKI_SUDIJA_SUDIJA1` FOREIGN KEY (`SUDIJA_SudijaId`) REFERENCES `sudija` (`SudijaId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `linijski_sudija`
+--
+
+LOCK TABLES `linijski_sudija` WRITE;
+/*!40000 ALTER TABLE `linijski_sudija` DISABLE KEYS */;
+/*!40000 ALTER TABLE `linijski_sudija` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `osvajac`
+--
+
+DROP TABLE IF EXISTS `osvajac`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `osvajac` (
+  `Sezona` varchar(8) NOT NULL,
+  `NazivKluba` varchar(100) NOT NULL,
+  PRIMARY KEY (`Sezona`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `osvajac`
+--
+
+LOCK TABLES `osvajac` WRITE;
+/*!40000 ALTER TABLE `osvajac` DISABLE KEYS */;
+/*!40000 ALTER TABLE `osvajac` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pomocni_sudija`
+--
+
+DROP TABLE IF EXISTS `pomocni_sudija`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pomocni_sudija` (
+  `SUDIJA_SudijaId` int NOT NULL,
+  PRIMARY KEY (`SUDIJA_SudijaId`),
+  CONSTRAINT `fk_POMOCNI_SUDIJA_SUDIJA1` FOREIGN KEY (`SUDIJA_SudijaId`) REFERENCES `sudija` (`SudijaId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pomocni_sudija`
+--
+
+LOCK TABLES `pomocni_sudija` WRITE;
+/*!40000 ALTER TABLE `pomocni_sudija` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pomocni_sudija` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `stadion`
+--
+
+DROP TABLE IF EXISTS `stadion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stadion` (
+  `StadionId` int NOT NULL AUTO_INCREMENT,
+  `Naziv` varchar(100) NOT NULL,
+  `Kapacitet` int NOT NULL,
+  `Grad` varchar(100) NOT NULL,
+  PRIMARY KEY (`StadionId`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `stadion`
+--
+
+LOCK TABLES `stadion` WRITE;
+/*!40000 ALTER TABLE `stadion` DISABLE KEYS */;
+INSERT INTO `stadion` VALUES (1,'Etihad',23000,'Manchester'),(2,'Old Trafford',45000,'Manchester'),(6,'Emirates Stadium',60704,'London'),(7,'Stamford Bridge',40341,'London'),(8,'White Hart Lane',62850,'London'),(9,'Anfield',54000,'Liverpool'),(10,'London Stadium',90000,'London'),(11,'Goodison Park',39572,'Liverpool'),(12,'St. James\' Park',52000,'Newcastle'),(13,'Selhurst Park',25486,'London'),(14,'St Mary\'s Stadium',32384,'Southampton'),(15,'King Power Stadium',32261,'Leicester'),(16,'Villa Park',42640,'Birmingham'),(17,'Vitality Stadium',11379,'Kings Park'),(18,'Molineux Stadium',32050,'Wolverhampton'),(19,'Falmer Stadium',31800,'Falmer'),(20,'Gtech Stadium',17250,'Brentford'),(21,'Craven Cottage',25700,'Fulham'),(22,'City Ground',62850,'West Bridgford'),(23,'Elland Road',37895,'Leeds');
+/*!40000 ALTER TABLE `stadion` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `check_stadium_capacity` BEFORE INSERT ON `stadion` FOR EACH ROW begin
+	if new.Kapacitet<0 then
+		signal sqlstate '45000' set message_text='Nevalidan kapacitet stadiona!';
+    end if;
+end */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
