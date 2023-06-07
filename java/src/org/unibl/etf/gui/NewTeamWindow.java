@@ -108,10 +108,13 @@ public class NewTeamWindow extends JFrame {
 					String name = nameField.getText();
 					String[] dateFieldParse = dateField.getText().split("-");
 					if(dateFieldParse.length != 3) {
-						throw new Exception("Problem!");
+						throw new Exception("Problem sa datumom!");
 					}
 					Date date = Date.valueOf(dateField.getText());
 					int numTrophiesWon = Integer.valueOf(trophiesWonField.getText());
+					if(numTrophiesWon<0) {
+						throw new Exception("Broj trofeja < 0!");
+					}
 					FootballClub s = new FootballClub();
 					s.setNaziv(name);
 					s.setDatumOsnivanja(date);
@@ -135,6 +138,9 @@ public class NewTeamWindow extends JFrame {
 					sg.setFrame(sg);
 					sg.setVisible(true);
 				} catch(Exception e1) {
+					ErrorBox errorBox = new ErrorBox();
+					errorBox.setVisible(true);
+					errorBox.setText(e1.getMessage());
 					e1.printStackTrace();
 				}				
 			}

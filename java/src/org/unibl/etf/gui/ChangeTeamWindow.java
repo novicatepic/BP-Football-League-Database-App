@@ -166,6 +166,9 @@ public class ChangeTeamWindow extends JFrame {
 							anything = true;
 						}
 						if(!String.valueOf(s.getBrojOsvojenihTrofeja()).equals(trophiesWonField.getText())) {
+							if(Integer.valueOf(trophiesWonField.getText()) < 0) {
+								throw new Exception("Num trophies < 0");
+							}
 							s.setBrojOsvojenihTrofeja(Integer.valueOf(trophiesWonField.getText()));
 							anything = true;
 						}

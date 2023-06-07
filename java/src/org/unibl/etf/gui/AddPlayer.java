@@ -142,38 +142,45 @@ public class AddPlayer extends JFrame implements PlayerInGameDAO {
 		JButton saveButton = new JButton("SAVE");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				Player p = (Player)choosePlayerBox.getSelectedItem();
-				int goals = Integer.valueOf(numGoalsField.getText());
-				int assists = Integer.valueOf(numAssistsField.getText());
-				boolean gotYellow = yellowCardCheckBox.isSelected();
-				boolean gotRed = redCardCheckBox.isSelected();
-				boolean startedGame = chckbxStartedGame.isSelected();
-				int minutesPlayed = Integer.valueOf(minutesPlayedField.getText());
-				PlayerInGame pig = new PlayerInGame();
-				pig.setBrojGolovaNaUtakmici(goals);
-				pig.setBrojAsistencijaNaUtakmici(assists);
-				pig.setDobioZuti(gotYellow);
-				pig.setDobioCrveni(gotRed);
-				pig.setPoceoUtakmicu(startedGame);
-				pig.setOdigraoMinuta(minutesPlayed);
-				pig.setIgrac_zaposlenik_zapolseniId(p.getZAPOSLENIK_ZapolseniId());
-				pig.setKlub_na_utakmici_fudbalski_klub_idKluba(clubId);
-				pig.setKlub_na_utakmici_utakmica_utakmicaId(gameId);
-				insert(pig);
-				frame.dispose();
-				//parentFrame.dispose();
 				try {
-					Thread.sleep(500);
-				} catch(Exception e1) {
-					e1.printStackTrace();
+					Player p = (Player)choosePlayerBox.getSelectedItem();
+					int goals = Integer.valueOf(numGoalsField.getText());
+					int assists = Integer.valueOf(numAssistsField.getText());
+					boolean gotYellow = yellowCardCheckBox.isSelected();
+					boolean gotRed = redCardCheckBox.isSelected();
+					boolean startedGame = chckbxStartedGame.isSelected();
+					int minutesPlayed = Integer.valueOf(minutesPlayedField.getText());
+					if(goals < 0 || assists < 0 || minutesPlayed < 0) {
+						throw new Exception("Goals or assists or mins played < 0");
+					}
+					PlayerInGame pig = new PlayerInGame();
+					pig.setBrojGolovaNaUtakmici(goals);
+					pig.setBrojAsistencijaNaUtakmici(assists);
+					pig.setDobioZuti(gotYellow);
+					pig.setDobioCrveni(gotRed);
+					pig.setPoceoUtakmicu(startedGame);
+					pig.setOdigraoMinuta(minutesPlayed);
+					pig.setIgrac_zaposlenik_zapolseniId(p.getZAPOSLENIK_ZapolseniId());
+					pig.setKlub_na_utakmici_fudbalski_klub_idKluba(clubId);
+					pig.setKlub_na_utakmici_utakmica_utakmicaId(gameId);
+					insert(pig);
+					frame.dispose();
+					//parentFrame.dispose();
+					try {
+						Thread.sleep(500);
+					} catch(Exception e1) {
+						e1.printStackTrace();
+						ErrorBox errorBox = new ErrorBox();
+						errorBox.setVisible(true);
+						errorBox.setText(e1.getMessage());
+					}
+				} catch(Exception ee) {
+					ee.printStackTrace();
 					ErrorBox errorBox = new ErrorBox();
 					errorBox.setVisible(true);
-					errorBox.setText(e1.getMessage());
+					errorBox.setText(ee.getMessage());
 				}
-				/*ShowPlayers sp = new ShowPlayers();
-				sp.setFrame(sp);
-				sp.setVisible(true);*/
+				
 			}
 		});
 		saveButton.setBounds(71, 618, 494, 57);

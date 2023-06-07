@@ -79,27 +79,38 @@ public class NewStadiumWindow extends JFrame {
 		JButton saveButton = new JButton("SAVE");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String name = nameField.getText();
-				int capacity = Integer.valueOf(dateField.getText());
-				String town = trophiesWonField.getText();
-				Stadium s = new Stadium();
-				s.setNaziv(name);
-				s.setKapacitet(capacity);
-				s.setGrad(town);
-				frame.insert(s);
 				try {
-					Thread.sleep(1000);
-				} catch(InterruptedException ex) {
+					String name = nameField.getText();
+					int capacity = Integer.valueOf(dateField.getText());
+					if(capacity < 0) {
+						throw new Exception("Kapacitet<0");
+					}
+					String town = trophiesWonField.getText();
+					Stadium s = new Stadium();
+					s.setNaziv(name);
+					s.setKapacitet(capacity);
+					s.setGrad(town);
+					frame.insert(s);
+					try {
+						Thread.sleep(1000);
+					} catch(InterruptedException ex) {
+						ErrorBox errorBox = new ErrorBox();
+						errorBox.setVisible(true);
+						errorBox.setText(ex.getMessage());
+						ex.printStackTrace();
+					}
+					stadiumFrame.dispose();
+					frame.dispose();
+					StadiumGui sg = new StadiumGui();
+					sg.setFrame(sg);
+					sg.setVisible(true);
+				} catch(Exception ex) {
 					ErrorBox errorBox = new ErrorBox();
 					errorBox.setVisible(true);
 					errorBox.setText(ex.getMessage());
 					ex.printStackTrace();
 				}
-				stadiumFrame.dispose();
-				frame.dispose();
-				StadiumGui sg = new StadiumGui();
-				sg.setFrame(sg);
-				sg.setVisible(true);
+				
 			}
 		});
 		saveButton.setBounds(35, 399, 643, 57);

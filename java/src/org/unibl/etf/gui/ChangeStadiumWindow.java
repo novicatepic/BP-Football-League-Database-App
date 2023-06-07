@@ -97,44 +97,55 @@ public class ChangeStadiumWindow extends JFrame {
 		JButton saveButton = new JButton("SAVE");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				List<Stadium> data = frame.getData();
-				Stadium s = null;
-				for(Stadium stad : data) {
-					if(stad.getStadionId() == id) {
-						s = stad;
-					}
-				}
-				if(s != null) {
-					boolean anything = false;
-					if(!s.getNaziv().equals(nameField.getText())) {
-						s.setNaziv(nameField.getText());
-						anything = true;
-					}
-					if(!String.valueOf(s.getKapacitet()).equals(capacityField.getText())) {
-						s.setKapacitet(Integer.valueOf(capacityField.getText()));
-						anything = true;
-					}
-					if(!s.getGrad().equals(townField.getText())) {
-						s.setGrad(townField.getText());
-						anything = true;
-					}
-					if(anything) {
-						frame.update(s);
-						try {
-							Thread.sleep(1000);
-						} catch(InterruptedException ex) {
-							ErrorBox errorBox = new ErrorBox();
-							errorBox.setVisible(true);
-							errorBox.setText(ex.getMessage());
-							ex.printStackTrace();
+				try {
+					List<Stadium> data = frame.getData();
+					Stadium s = null;
+					for(Stadium stad : data) {
+						if(stad.getStadionId() == id) {
+							s = stad;
 						}
-						changeFrame.dispose();
-						frame.dispose();
-						StadiumGui sg = new StadiumGui();
-						sg.setFrame(sg);
-						sg.setVisible(true);
 					}
+					if(s != null) {
+						boolean anything = false;
+						if(!s.getNaziv().equals(nameField.getText())) {
+							s.setNaziv(nameField.getText());
+							anything = true;
+						}
+						if(!String.valueOf(s.getKapacitet()).equals(capacityField.getText())) {
+							if(Integer.valueOf(capacityField.getText()) < 0) {
+								throw new Exception("Capacity < 0");
+							}
+							s.setKapacitet(Integer.valueOf(capacityField.getText()));
+							anything = true;
+						}
+						if(!s.getGrad().equals(townField.getText())) {
+							s.setGrad(townField.getText());
+							anything = true;
+						}
+						if(anything) {
+							frame.update(s);
+							try {
+								Thread.sleep(1000);
+							} catch(InterruptedException ex) {
+								ErrorBox errorBox = new ErrorBox();
+								errorBox.setVisible(true);
+								errorBox.setText(ex.getMessage());
+								ex.printStackTrace();
+							}
+							changeFrame.dispose();
+							frame.dispose();
+							StadiumGui sg = new StadiumGui();
+							sg.setFrame(sg);
+							sg.setVisible(true);
+						}
+					}
+				} catch(Exception ee) {
+					ErrorBox errorBox = new ErrorBox();
+					errorBox.setVisible(true);
+					errorBox.setText(ee.getMessage());
+					ee.printStackTrace();
 				}
+				
 			}
 		});
 		saveButton.setBounds(35, 399, 643, 57);

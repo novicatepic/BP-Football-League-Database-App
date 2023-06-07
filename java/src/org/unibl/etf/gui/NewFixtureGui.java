@@ -117,7 +117,7 @@ public class NewFixtureGui extends JFrame {
 					Fixture f = fixture;
 					String[] dateFieldParse = newDateField.getText().split("-");
 					if(dateFieldParse.length != 3) {
-						throw new Exception("Problem!");
+						throw new Exception("Date problem!");
 					}
 					Date date = Date.valueOf(newDateField.getText());
 					MainReferee mr = (MainReferee)refereeBox.getSelectedItem();
@@ -127,6 +127,12 @@ public class NewFixtureGui extends JFrame {
 					FootballClub awayTeam = (FootballClub)chooseAwayTeamBox.getSelectedItem();
 					if(homeTeam == awayTeam) {
 						throw new SameTeamsException("Same teams cannot play against each other");
+					}
+					if(homeTeamGoals < 0) {
+						throw new Exception("Home team goals < 0");
+					}
+					if(awayTeamGoals < 0) {
+						throw new Exception("Away team goals < 0");
 					}
 					Game game = new Game();
 					game.setDatumUtakmice(date);

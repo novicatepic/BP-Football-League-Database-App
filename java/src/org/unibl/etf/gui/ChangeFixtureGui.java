@@ -93,33 +93,44 @@ public class ChangeFixtureGui extends JFrame {
 		JButton saveButton = new JButton("SAVE");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean anything = false;
-				int homeGoals2 = Integer.valueOf(homeTeamGoals.getText());
-				int awayGoals2 = Integer.valueOf(awayTeamGoals.getText());
-				String[] split = clubIds.split("-");
-				if(homeGoals2 != homeGoals) {
-					anything = true;
-				}
-				if(awayGoals2 != awayGoals) {
-					anything = true;
-				}
-				if(anything) {
-					showGuiFrame.updateTeamInGame(homeGoals2, awayGoals2, Integer.valueOf(split[0]), gameId);
-					showGuiFrame.updateTeamInGame(awayGoals2, homeGoals2, Integer.valueOf(split[1]), gameId);
-					try {
-						Thread.sleep(1000);
-					} catch(InterruptedException ex) {
-						ErrorBox errorBox = new ErrorBox();
-						errorBox.setVisible(true);
-						errorBox.setText(ex.getMessage());
-						ex.printStackTrace();
+				try {
+					boolean anything = false;
+					int homeGoals2 = Integer.valueOf(homeTeamGoals.getText());
+					int awayGoals2 = Integer.valueOf(awayTeamGoals.getText());
+					String[] split = clubIds.split("-");
+					if(homeGoals2 < 0 || awayGoals2 < 0) {
+						throw new Exception("Home or away goals < 0");
 					}
-					showGuiFrame.dispose();
-					frame.dispose();
-					FixtureShowGui sg = new FixtureShowGui();
-					sg.setFrame(sg);
-					sg.setVisible(true);
-				}
+					if(homeGoals2 != homeGoals) {
+						anything = true;
+					}
+					if(awayGoals2 != awayGoals) {
+						anything = true;
+					}
+					if(anything) {
+						showGuiFrame.updateTeamInGame(homeGoals2, awayGoals2, Integer.valueOf(split[0]), gameId);
+						showGuiFrame.updateTeamInGame(awayGoals2, homeGoals2, Integer.valueOf(split[1]), gameId);
+						try {
+							Thread.sleep(1000);
+						} catch(InterruptedException ex) {
+							ErrorBox errorBox = new ErrorBox();
+							errorBox.setVisible(true);
+							errorBox.setText(ex.getMessage());
+							ex.printStackTrace();
+						}
+						showGuiFrame.dispose();
+						frame.dispose();
+						FixtureShowGui sg = new FixtureShowGui();
+						sg.setFrame(sg);
+						sg.setVisible(true);
+					}
+ 				} catch(Exception ee) {
+ 					ErrorBox errorBox = new ErrorBox();
+					errorBox.setVisible(true);
+					errorBox.setText(ee.getMessage());
+					ee.printStackTrace();
+ 				}
+				
 				
 			}
 		});
