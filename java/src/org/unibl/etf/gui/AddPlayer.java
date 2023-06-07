@@ -110,7 +110,7 @@ public class AddPlayer extends JFrame implements PlayerInGameDAO {
 
 		
 		choosePlayerBox = new JComboBox();
-		choosePlayerBox.setBounds(217, 49, 132, 34);
+		choosePlayerBox.setBounds(217, 49, 264, 34);
 		contentPane.add(choosePlayerBox);
 		
 		JLabel lblFixtureNum = new JLabel("Choose a player = ");

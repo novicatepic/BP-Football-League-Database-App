@@ -236,7 +236,7 @@ public class TeamGui extends JFrame implements FootballClubDAO {
 		
 		JLabel lblStadiumname = new JLabel("STADIUM_NAME");
 		lblStadiumname.setHorizontalAlignment(SwingConstants.CENTER);
-		lblStadiumname.setBounds(642, 60, 85, 27);
+		lblStadiumname.setBounds(633, 60, 107, 27);
 		contentPane.add(lblStadiumname);
 		
 		JLabel lblNewLabel_1 = new JLabel("TEAMS");

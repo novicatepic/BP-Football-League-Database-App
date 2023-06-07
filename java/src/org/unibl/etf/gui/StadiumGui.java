@@ -205,22 +205,22 @@ public class StadiumGui extends JFrame implements StadiumDAO {
 				
 				JLabel lblNewLabel = new JLabel("ID");
 				lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-				lblNewLabel.setBounds(57, 55, 66, 27);
+				lblNewLabel.setBounds(37, 55, 66, 27);
 				contentPane.add(lblNewLabel);
 				
 				JLabel lblFoundationDate = new JLabel("NAME");
 				lblFoundationDate.setHorizontalAlignment(SwingConstants.CENTER);
-				lblFoundationDate.setBounds(205, 55, 85, 27);
+				lblFoundationDate.setBounds(180, 55, 85, 27);
 				contentPane.add(lblFoundationDate);
 				
 				JLabel lblNumtrophies = new JLabel("CAPACITY");
 				lblNumtrophies.setHorizontalAlignment(SwingConstants.CENTER);
-				lblNumtrophies.setBounds(382, 55, 85, 27);
+				lblNumtrophies.setBounds(349, 55, 85, 27);
 				contentPane.add(lblNumtrophies);
 				
 				JLabel lblStadiumname = new JLabel("TOWN");
 				lblStadiumname.setHorizontalAlignment(SwingConstants.CENTER);
-				lblStadiumname.setBounds(544, 55, 85, 27);
+				lblStadiumname.setBounds(499, 55, 85, 27);
 				contentPane.add(lblStadiumname);
 				
 				JLabel lblNewLabel_1 = new JLabel("STADIUMS");

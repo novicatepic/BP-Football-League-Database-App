@@ -80,7 +80,7 @@ public class ChangeTeamWindow extends JFrame {
 	 */
 	public ChangeTeamWindow() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 723, 448);
+		setBounds(100, 100, 797, 448);
 		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -119,12 +119,12 @@ public class ChangeTeamWindow extends JFrame {
 		contentPane.add(trophiesWonField);
 		
 		chooseStadiumBox = new JComboBox();
-		chooseStadiumBox.setBounds(585, 130, 93, 21);
+		chooseStadiumBox.setBounds(585, 130, 188, 21);
 		contentPane.add(chooseStadiumBox);
 		
 		JLabel lblChooseStadium = new JLabel("Choose stadium = ");
 		lblChooseStadium.setHorizontalAlignment(SwingConstants.CENTER);
-		lblChooseStadium.setBounds(440, 109, 172, 62);
+		lblChooseStadium.setBounds(429, 109, 172, 62);
 		contentPane.add(lblChooseStadium);
 		
 		saveButton = new JButton("SAVE");
@@ -201,7 +201,7 @@ public class ChangeTeamWindow extends JFrame {
 			}
 		});
 		//saveButton.doClick();
-		saveButton.setBounds(35, 335, 643, 57);
+		saveButton.setBounds(35, 335, 738, 57);
 		contentPane.add(saveButton);
 		
 		JLabel lblNewLabel_1 = new JLabel("CHANGE CLUB");
